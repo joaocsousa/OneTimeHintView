@@ -1,4 +1,4 @@
-package com.tinycoolthings.gotitwidget;
+package com.tinycoolthings.gotitwidgettest;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
