@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="one_time_hint_view_default_card_color">#3F51B5</color>
+    <color name="one_time_hint_view_default_background_color">@android:color/transparent</color>
+    <color name="one_time_hint_view_default_text_color">@android:color/white</color>
+</resources>

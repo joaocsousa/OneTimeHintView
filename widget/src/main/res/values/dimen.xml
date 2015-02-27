@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="got_it_widget_default_margin">16dp</dimen>
-    <dimen name="got_it_widget_default_corner_radius">3dp</dimen>
-    <dimen name="got_it_widget_default_card_elevation">3dp</dimen>
+    <dimen name="one_time_hint_view_default_card_margin">16dp</dimen>
+    <dimen name="one_time_hint_view_default_card_padding">16dp</dimen>
+    <dimen name="one_time_hint_view_default_card_corner_radius">3dp</dimen>
+    <dimen name="one_time_hint_view_default_card_elevation">3dp</dimen>
 </resources>

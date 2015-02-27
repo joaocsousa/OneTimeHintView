@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="OneTimeHintView">
+        <attr name="one_time_hint_view_background_color" format="color"/>
+        <attr name="one_time_hint_view_card_color" format="color"/>
+        <attr name="one_time_hint_view_title" format="string"/>
+        <attr name="one_time_hint_view_description" format="string"/>
+        <attr name="one_time_hint_view_key" format="string|string"/>
+        <attr name="one_time_hint_text_color" format="color"/>
+    </declare-styleable>
+</resources>
