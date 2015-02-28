@@ -16,12 +16,15 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.tinycoolthings.gotitwidget.ui.AttributeManager;
 import com.tinycoolthings.gotitwidget.util.SimpleAnimatorListener;
-import com.tinycoolthings.gotitwidget.util.Size;
+import com.tinycoolthings.gotitwidget.ui.Size;
+import com.tinycoolthings.gotitwidget.util.Utils;
 
 import java.util.ArrayList;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+import static com.tinycoolthings.gotitwidget.util.Utils.isInDebugMode;
 
 /**
  * Created by joaosousa on 25/02/15.
@@ -176,7 +179,9 @@ public class OneTimeHintView extends LinearLayout {
 			String buttonLabel = typedArray.getString(R.styleable.OneTimeHintView_one_time_hint_view_button_label);
 			mAttributeManager.setButtonLabel(buttonLabel != null && !buttonLabel.isEmpty() ? buttonLabel : defaultButtonLabel);
 			// debug
-			mAttributeManager.setDebug(typedArray.getBoolean(R.styleable.OneTimeHintView_one_time_hint_debug, false));
+			boolean isInDebugMode = isInDebugMode(getContext()) &&
+				typedArray.getBoolean(R.styleable.OneTimeHintView_one_time_hint_debug, false);
+			mAttributeManager.setDebug(isInDebugMode);
 		} finally {
 			typedArray.recycle();
 		}
@@ -189,128 +194,36 @@ public class OneTimeHintView extends LinearLayout {
 		mOnDismissListeners.add(onDismissListener);
 	}
 
-	private void setButtonLabelTextColor(int buttonLabelTextColor) {
+	public void setButtonLabelTextColor(int buttonLabelTextColor) {
 		((Button) findViewById(R.id.one_time_hint_view_cardview_button)).setTextColor(buttonLabelTextColor);
 	}
 
-	private void setButtonLabel(CharSequence buttonLabel) {
+	public void setButtonLabel(CharSequence buttonLabel) {
 		((Button) findViewById(R.id.one_time_hint_view_cardview_button)).setText(buttonLabel);
 	}
 
-	private void setDescription(CharSequence description) {
+	public void setDescription(CharSequence description) {
 		((TextView) findViewById(R.id.one_time_hint_view_cardview_description)).setText(description);
 	}
 
-	private void setTitle(CharSequence title) {
+	public void setTitle(CharSequence title) {
 		((TextView) findViewById(R.id.one_time_hint_view_cardview_title)).setText(title);
 	}
 
-	private void setDescriptionTextColor(int titleTextColor) {
+	public void setDescriptionTextColor(int titleTextColor) {
 		((TextView) findViewById(R.id.one_time_hint_view_cardview_description)).setTextColor(titleTextColor);
 	}
 
-	private void setTitleTextColor(int titleTextColor) {
+	public void setTitleTextColor(int titleTextColor) {
 		((TextView) findViewById(R.id.one_time_hint_view_cardview_title)).setTextColor(titleTextColor);
 	}
 
-	private void setCardBackgroundColor(int cardBackgroundColor) {
+	public void setCardBackgroundColor(int cardBackgroundColor) {
 		((CardView) findViewById(R.id.one_time_hint_view_cardview)).setCardBackgroundColor(cardBackgroundColor);
 	}
 
 	public interface OnDismissListener {
 		void onDismiss();
 	}
-
-	interface AttributeApplier {
-		void applyTo(OneTimeHintView target);
-	}
-
-	private static class AttributeManager implements AttributeApplier {
-
-		private Attributes mAttributes = new Attributes();
-
-		public String getPreferencesKey() {
-			return mAttributes.mPreferencesKey;
-		}
-
-		public void setPreferencesKey(String preferencesKey) {
-			mAttributes.mPreferencesKey = preferencesKey;
-		}
-
-		public Boolean isInDebug() {
-			return mAttributes.mDebug;
-		}
-
-		public void setBackgroundColor(int backgroundColor) {
-			mAttributes.mBackgroundColor = backgroundColor;
-		}
-
-		public void setCardBackgroundColor(int cardBackgroundColor) {
-			mAttributes.mCardBackgroundColor = cardBackgroundColor;
-		}
-
-		public int getGlobalTextColor() {
-			return mAttributes.mGlobalTextColor;
-		}
-
-		public void setGlobalTextColor(int globalTextColor) {
-			mAttributes.mGlobalTextColor = globalTextColor;
-		}
-
-		public void setTitleTextColor(int titleTextColor) {
-			mAttributes.mTitleTextColor = titleTextColor;
-		}
-
-		public void setDescriptionTextColor(int descriptionTextColor) {
-			mAttributes.mDescriptionTextColor = descriptionTextColor;
-		}
-
-		public void setTitle(CharSequence title) {
-			mAttributes.mTitle = title;
-		}
-
-		public void setDescription(CharSequence description) {
-			mAttributes.mDescription = description;
-		}
-
-		public void setButtonLabel(CharSequence buttonLabel) {
-			mAttributes.mButtonLabel = buttonLabel;
-		}
-
-		public void setButtonLabelTextColor(int buttonLabelTextColor) {
-			mAttributes.mButtonLabelTextColor = buttonLabelTextColor;
-		}
-
-		@Override
-		public void applyTo(OneTimeHintView target) {
-			target.setBackgroundColor(mAttributes.mBackgroundColor);
-			target.setCardBackgroundColor(mAttributes.mCardBackgroundColor);
-			target.setTitleTextColor(mAttributes.mTitleTextColor);
-			target.setDescriptionTextColor(mAttributes.mDescriptionTextColor);
-			target.setTitle(mAttributes.mTitle);
-			target.setDescription(mAttributes.mDescription);
-			target.setButtonLabel(mAttributes.mButtonLabel);
-			target.setButtonLabelTextColor(mAttributes.mButtonLabelTextColor);
-		}
-
-		public void setDebug(boolean debug) {
-			mAttributes.mDebug = debug;
-		}
-
-		class Attributes {
-			private String mPreferencesKey;
-			private int mBackgroundColor;
-			private int mCardBackgroundColor;
-			private int mGlobalTextColor;
-			private int mTitleTextColor;
-			private int mDescriptionTextColor;
-			private CharSequence mTitle;
-			private CharSequence mDescription;
-			private CharSequence mButtonLabel;
-			private int mButtonLabelTextColor;
-			private boolean mDebug;
-		}
-	}
-
 
 }

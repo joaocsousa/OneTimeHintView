@@ -1,4 +1,4 @@
-package com.tinycoolthings.gotitwidget.util;
+package com.tinycoolthings.gotitwidget.ui;
 
 /**
  * Created by joaosousa on 27/02/15.
@@ -16,5 +16,5 @@ public class Size {
 	public int getHeight() {
 		return mHeight;
 	}
-	
+
 }
