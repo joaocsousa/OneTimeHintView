@@ -17,9 +17,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tinycoolthings.gotitwidget.ui.AttributeManager;
-import com.tinycoolthings.gotitwidget.util.SimpleAnimatorListener;
 import com.tinycoolthings.gotitwidget.ui.Size;
-import com.tinycoolthings.gotitwidget.util.Utils;
+import com.tinycoolthings.gotitwidget.util.SimpleAnimatorListener;
 
 import java.util.ArrayList;
 
