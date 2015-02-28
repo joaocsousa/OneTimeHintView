@@ -1,18 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/abc_btn_check_material"/>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
 
     <TextView
+        style="@style/TextAppearance.AppCompat.Headline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="This is a custom layout!"
-        android:textColor="@android:color/white"/>
+        android:text="Awesome custom layout"
+        android:layout_marginTop="8dp"
+        android:drawableStart="@drawable/ic_action_emo_cool"
+        android:drawableLeft="@drawable/ic_action_emo_cool"
+        android:drawablePadding="8dp"
+        android:textColor="@android:color/white"
+        android:layout_gravity="center_horizontal"/>
+
+    <TextView
+        style="@style/TextAppearance.AppCompat.Large.Inverse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Content"
+        android:layout_marginTop="24dp"
+        android:layout_gravity="center_horizontal"/>
 
 </LinearLayout>
