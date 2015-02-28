@@ -31,11 +31,13 @@ import static com.tinycoolthings.onetimehintview.util.Utils.isInDebugMode;
 public class OneTimeHintView extends LinearLayout {
 
 	private static final int DEFAULT_ANIMATION_DURATION = 250;
+	private static final int DEFAULT_CONTENT_LAYOUT = R.layout.view_one_time_hint_view_default_content;
 
 	private ArrayList<OnDismissListener> mOnDismissListeners = new ArrayList<>();
 	private boolean mShow = true;
 	private Size mSize;
 	private AttributeManager mAttributeManager = new AttributeManager();
+	private boolean mDefaultContentLayout = false;
 
 	public OneTimeHintView(Context context) {
 		this(context, null);
@@ -147,41 +149,46 @@ public class OneTimeHintView extends LinearLayout {
 	private void processAttributes(AttributeSet attrs, int defStyleAttr, int defStyleRes) {
 		TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.OneTimeHintView, defStyleAttr, defStyleRes);
 		try {
+			// content layout
+			int layoutResource = typedArray.getResourceId(
+				R.styleable.OneTimeHintView_oneTimeHintView_contentLayout,
+				DEFAULT_CONTENT_LAYOUT);
+			mAttributeManager.setContentLayout(layoutResource);
 			// preferences key
-			mAttributeManager.setPreferencesKey(typedArray.getString(R.styleable.OneTimeHintView_one_time_hint_view_key));
+			mAttributeManager.setPreferencesKey(typedArray.getString(R.styleable.OneTimeHintView_oneTimeHintView_key));
 			if (mAttributeManager.getPreferencesKey() == null || mAttributeManager.getPreferencesKey().isEmpty()) {
 				throw new IllegalStateException("You definitely need to provide a preferences key to the " + getClass().getSimpleName() +
 					". Use the attribute \'one_time_hint_view_key\' to provide a unique key.");
 			}
 			// background color
 			int backgroundColor = typedArray.getColor(
-				R.styleable.OneTimeHintView_one_time_hint_view_background_color,
+				R.styleable.OneTimeHintView_oneTimeHintView_backgroundColor,
 				R.color.one_time_hint_view_default_background_color);
 			mAttributeManager.setBackgroundColor(getResources().getColor(backgroundColor));
 			// card background color
 			int cardBackgroundColor = typedArray.getColor(
-				R.styleable.OneTimeHintView_one_time_hint_view_card_color,
+				R.styleable.OneTimeHintView_oneTimeHintView_cardColor,
 				R.color.one_time_hint_view_default_card_color);
 			mAttributeManager.setCardBackgroundColor(getResources().getColor(cardBackgroundColor));
 			// text color
 			int textColor = typedArray.getColor(
-				R.styleable.OneTimeHintView_one_time_hint_view_card_color,
+				R.styleable.OneTimeHintView_oneTimeHintView_cardColor,
 				R.color.one_time_hint_view_default_text_color);
 			mAttributeManager.setGlobalTextColor(getResources().getColor(textColor));
 			// title
 			mAttributeManager.setTitleTextColor(mAttributeManager.getGlobalTextColor());
-			mAttributeManager.setTitle(typedArray.getString(R.styleable.OneTimeHintView_one_time_hint_view_title));
+			mAttributeManager.setTitle(typedArray.getString(R.styleable.OneTimeHintView_oneTimeHintView_title));
 			// description
 			mAttributeManager.setDescriptionTextColor(mAttributeManager.getGlobalTextColor());
-			mAttributeManager.setDescription(typedArray.getString(R.styleable.OneTimeHintView_one_time_hint_view_description));
+			mAttributeManager.setDescription(typedArray.getString(R.styleable.OneTimeHintView_oneTimeHintView_description));
 			// button label
 			mAttributeManager.setButtonLabelTextColor(mAttributeManager.getGlobalTextColor());
 			CharSequence defaultButtonLabel = getResources().getString(R.string.one_time_hint_view_button_default_label);
-			String buttonLabel = typedArray.getString(R.styleable.OneTimeHintView_one_time_hint_view_button_label);
+			String buttonLabel = typedArray.getString(R.styleable.OneTimeHintView_oneTimeHintView_buttonLabel);
 			mAttributeManager.setButtonLabel(buttonLabel != null && !buttonLabel.isEmpty() ? buttonLabel : defaultButtonLabel);
 			// debug
 			boolean isInDebugMode = isInDebugMode(getContext()) &&
-				typedArray.getBoolean(R.styleable.OneTimeHintView_one_time_hint_debug, false);
+				typedArray.getBoolean(R.styleable.OneTimeHintView_oneTimeHintView_debug, false);
 			mAttributeManager.setDebug(isInDebugMode);
 		} finally {
 			typedArray.recycle();
@@ -204,23 +211,39 @@ public class OneTimeHintView extends LinearLayout {
 	}
 
 	public void setDescription(CharSequence description) {
-		((TextView) findViewById(R.id.one_time_hint_view_cardview_description)).setText(description);
+		if (mDefaultContentLayout) {
+			((TextView) findViewById(R.id.one_time_hint_view_cardview_description)).setText(description);
+		}
 	}
 
 	public void setTitle(CharSequence title) {
-		((TextView) findViewById(R.id.one_time_hint_view_cardview_title)).setText(title);
+		if (mDefaultContentLayout) {
+			((TextView) findViewById(R.id.one_time_hint_view_cardview_title)).setText(title);
+		}
 	}
 
 	public void setDescriptionTextColor(int titleTextColor) {
-		((TextView) findViewById(R.id.one_time_hint_view_cardview_description)).setTextColor(titleTextColor);
+		if (mDefaultContentLayout) {
+			((TextView) findViewById(R.id.one_time_hint_view_cardview_description)).setTextColor(titleTextColor);
+		}
 	}
 
 	public void setTitleTextColor(int titleTextColor) {
-		((TextView) findViewById(R.id.one_time_hint_view_cardview_title)).setTextColor(titleTextColor);
+		if (mDefaultContentLayout) {
+			((TextView) findViewById(R.id.one_time_hint_view_cardview_title)).setTextColor(titleTextColor);
+		}
 	}
 
 	public void setCardBackgroundColor(int cardBackgroundColor) {
 		((CardView) findViewById(R.id.one_time_hint_view_cardview)).setCardBackgroundColor(cardBackgroundColor);
+	}
+
+	public void setContentLayout(int contentLayout) {
+		mDefaultContentLayout = contentLayout == DEFAULT_CONTENT_LAYOUT;
+		ViewGroup root = (ViewGroup) findViewById(R.id.one_time_hint_view_content_container);
+		View content = LayoutInflater.from(getContext())
+			.inflate(contentLayout, root, false);
+		root.addView(content, 0);
 	}
 
 	public interface OnDismissListener {

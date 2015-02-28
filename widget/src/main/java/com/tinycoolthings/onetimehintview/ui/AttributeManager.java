@@ -64,6 +64,7 @@ public class AttributeManager implements AttributeApplier {
 
 	@Override
 	public void applyTo(OneTimeHintView target) {
+		target.setContentLayout(mAttributes.mLayoutResource);
 		target.setBackgroundColor(mAttributes.mBackgroundColor);
 		target.setCardBackgroundColor(mAttributes.mCardBackgroundColor);
 		target.setTitleTextColor(mAttributes.mTitleTextColor);
@@ -78,6 +79,10 @@ public class AttributeManager implements AttributeApplier {
 		mAttributes.mDebug = debug;
 	}
 
+	public void setContentLayout(int layoutResource) {
+		mAttributes.mLayoutResource = layoutResource;
+	}
+
 	class Attributes {
 		private String mPreferencesKey;
 		private int mBackgroundColor;
@@ -90,5 +95,6 @@ public class AttributeManager implements AttributeApplier {
 		private CharSequence mButtonLabel;
 		private int mButtonLabelTextColor;
 		private boolean mDebug;
+		private int mLayoutResource;
 	}
 }

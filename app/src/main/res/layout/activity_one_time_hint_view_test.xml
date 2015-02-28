@@ -10,10 +10,11 @@
     <com.tinycoolthings.onetimehintview.OneTimeHintView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:one_time_hint_view_title="Cool Card!"
-        app:one_time_hint_view_description="This is a very cool card used to display some really useful information!"
-        app:one_time_hint_view_key="got_it_test"
-        app:one_time_hint_debug="true"/>
+        app:oneTimeHintView_title="Cool Card!"
+        app:oneTimeHintView_description="This is a very cool card used to display some really useful information!"
+        app:oneTimeHintView_key="got_it_test"
+        app:oneTimeHintView_debug="true"
+        app:oneTimeHintView_contentLayout="@layout/view_one_time_hint_view_test_custom_content"/>
 
     <LinearLayout
         android:layout_width="match_parent"
