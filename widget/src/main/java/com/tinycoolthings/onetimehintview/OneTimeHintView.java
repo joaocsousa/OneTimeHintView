@@ -30,6 +30,8 @@ import static com.tinycoolthings.onetimehintview.util.Utils.isInDebugMode;
  */
 public class OneTimeHintView extends LinearLayout {
 
+	private static final int DEFAULT_ANIMATION_DURATION = 250;
+
 	private ArrayList<OnDismissListener> mOnDismissListeners = new ArrayList<>();
 	private boolean mShow = true;
 	private Size mSize;
@@ -107,7 +109,7 @@ public class OneTimeHintView extends LinearLayout {
 				@Override
 				public void onDismiss() {
 					ValueAnimator animator = ValueAnimator.ofFloat(mSize.getHeight(), 0);
-					animator.setDuration(200);
+					animator.setDuration(DEFAULT_ANIMATION_DURATION);
 					animator.setInterpolator(new AccelerateInterpolator());
 					animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 						public void onAnimationUpdate(ValueAnimator animation) {
