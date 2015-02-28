@@ -1,6 +1,6 @@
-package com.tinycoolthings.gotitwidget.ui;
+package com.tinycoolthings.onetimehintview.ui;
 
-import com.tinycoolthings.gotitwidget.OneTimeHintView;
+import com.tinycoolthings.onetimehintview.OneTimeHintView;
 
 /**
  * Created by joaosousa on 28/02/15.

@@ -1,4 +1,4 @@
-package com.tinycoolthings.gotitwidget.ui;
+package com.tinycoolthings.onetimehintview.ui;
 
 /**
  * Created by joaosousa on 27/02/15.

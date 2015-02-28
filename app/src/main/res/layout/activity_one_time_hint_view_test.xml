@@ -4,10 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.tinycoolthings.gotitwidgettest.GotItWidgetTestActivity"
+    tools:context="com.tinycoolthings.onetimehintviewtest.OneTimeHintViewTestActivity"
     android:orientation="vertical">
 
-    <com.tinycoolthings.gotitwidget.OneTimeHintView
+    <com.tinycoolthings.onetimehintview.OneTimeHintView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:one_time_hint_view_title="Cool Card!"

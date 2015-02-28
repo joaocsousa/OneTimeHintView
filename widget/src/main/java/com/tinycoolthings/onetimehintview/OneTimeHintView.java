@@ -1,4 +1,4 @@
-package com.tinycoolthings.gotitwidget;
+package com.tinycoolthings.onetimehintview;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
@@ -16,14 +16,14 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.tinycoolthings.gotitwidget.ui.AttributeManager;
-import com.tinycoolthings.gotitwidget.ui.Size;
-import com.tinycoolthings.gotitwidget.util.SimpleAnimatorListener;
+import com.tinycoolthings.onetimehintview.ui.AttributeManager;
+import com.tinycoolthings.onetimehintview.ui.Size;
+import com.tinycoolthings.onetimehintview.util.SimpleAnimatorListener;
 
 import java.util.ArrayList;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
-import static com.tinycoolthings.gotitwidget.util.Utils.isInDebugMode;
+import static com.tinycoolthings.onetimehintview.util.Utils.isInDebugMode;
 
 /**
  * Created by joaosousa on 25/02/15.

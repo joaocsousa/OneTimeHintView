@@ -1,4 +1,4 @@
-package com.tinycoolthings.gotitwidgettest;
+package com.tinycoolthings.onetimehintviewtest;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

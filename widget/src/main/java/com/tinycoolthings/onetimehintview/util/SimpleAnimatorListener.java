@@ -1,4 +1,4 @@
-package com.tinycoolthings.gotitwidget.util;
+package com.tinycoolthings.onetimehintview.util;
 
 import android.animation.Animator;
 

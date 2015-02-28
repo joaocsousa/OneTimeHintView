@@ -1,10 +1,10 @@
-package com.tinycoolthings.gotitwidget.ui;
+package com.tinycoolthings.onetimehintview.ui;
 
 /**
  * Created by joaosousa on 28/02/15.
  */
 
-import com.tinycoolthings.gotitwidget.OneTimeHintView;
+import com.tinycoolthings.onetimehintview.OneTimeHintView;
 
 public class AttributeManager implements AttributeApplier {
 

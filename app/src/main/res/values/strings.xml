@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">GotItWidget</string>
+    <string name="app_name">OneTimeHintView</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_got_it_widget_test">GotItWidgetTestActivity</string>
+    <string name="title_activity_one_time_hint_view_test">OneTimeHintViewTestActivity</string>
 </resources>
