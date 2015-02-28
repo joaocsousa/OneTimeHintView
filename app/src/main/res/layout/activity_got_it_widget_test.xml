@@ -1,14 +1,33 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context="com.tinycoolthings.gotitwidgettest.GotItWidgetTestActivity">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.tinycoolthings.gotitwidgettest.GotItWidgetTestActivity"
+    android:orientation="vertical">
 
     <com.tinycoolthings.gotitwidget.OneTimeHintView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:one_time_hint_view_title="Cool Card!"
-        app:one_time_hint_view_description="This is a very cool card used to display some really useful information!"/>
+        app:one_time_hint_view_description="This is a very cool card used to display some really useful information!"
+        app:one_time_hint_view_key="got_it_test"
+        app:one_time_hint_debug="true"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#E91E63"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:text="This is a very cool hint card!"/>
+
+    </LinearLayout>
 
 </LinearLayout>

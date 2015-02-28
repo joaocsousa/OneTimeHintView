@@ -44,8 +44,7 @@
             android:id="@+id/one_time_hint_view_cardview_button"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/one_time_hint_view_button_default_label"/>
+            android:layout_height="wrap_content"/>
 
     </LinearLayout>
 
