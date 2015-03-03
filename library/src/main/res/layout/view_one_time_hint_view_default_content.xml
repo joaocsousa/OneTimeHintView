@@ -13,7 +13,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="*Title*"
-        style="@style/Base.TextAppearance.AppCompat.Headline"/>
+        android:textSize="24sp"
+        android:textColor="?android:textColorPrimary"/>
 
     <TextView
         android:id="@+id/one_time_hint_view_cardview_description"
@@ -21,6 +22,7 @@
         android:layout_height="wrap_content"
         tools:text="*Description*"
         android:layout_marginTop="16dp"
-        style="@style/Base.TextAppearance.AppCompat.Subhead"/>
+        android:textSize="16sp"
+        android:textColor="?android:textColorPrimary"/>
 
 </LinearLayout>
