@@ -1,5 +1,22 @@
 apply plugin: 'com.android.library'
 
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+version = "0.5.0"
+group = "com.github.joaocsousa"
+
+configurations {
+    archives {
+        extendsFrom configurations.default
+    }
+}
+
+signing {
+    required { has("release") && gradle.taskGraph.hasTask("uploadArchives") }
+    sign configurations.archives
+}
+
 android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
@@ -8,13 +25,68 @@ android {
         minSdkVersion 15
         targetSdkVersion 21
         versionCode 1
-        versionName "1.0"
+        versionName project.version
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+}
+
+uploadArchives {
+    configuration = configurations.archives
+    repositories.mavenDeployer {
+
+        def propertiesFile = "OneTimeHintView.properties";
+
+        if(project.hasProperty(propertiesFile)) {
+            if (new File(project.property(propertiesFile)).exists()) {
+                Properties props = new Properties()
+                props.load(new FileInputStream(file(project.property(propertiesFile))))
+
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+                repository(url: props.sonatypeRepo) {
+                    authentication(userName: props.sonatypeUsername, password: props.sonatypePassword)
+                }
+
+                pom.project {
+                    name 'OneTime Hint View'
+                    packaging 'aar'
+                    description 'Android library that provides a onetime hint view. Once dismissed it won\'t show again.'
+                    url 'https://github.com/joaocsousa/OneTimeHintView'
+
+                    scm {
+                        url 'scm:git@github.com:joaocsousa/OneTimeHintView.git'
+                        connection 'scm:git@github.com:joaocsousa/OneTimeHintView.git'
+                        developerConnection 'scm:git@github.com:joaocsousa/OneTimeHintView.git'
+                    }
+
+                    licenses {
+                        license {
+                            name 'The Apache Software License, Version 2.0'
+                            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                            distribution 'repo'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id 'joaocsousa'
+                            name 'Joao Sousa'
+                            email 'jcruzsou@gmail.com'
+                        }
+                    }
+                }
+            } else {
+                println "File " + project.property(propertiesFile) + " doesn't exist";
+            }
+        } else {
+            println "Property " + propertiesFile + " doesn't exist in the gradle.build file";
+        }
+
     }
 }
 
