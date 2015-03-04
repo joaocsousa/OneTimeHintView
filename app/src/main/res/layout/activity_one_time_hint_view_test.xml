@@ -7,13 +7,18 @@
     tools:context="com.tinycoolthings.onetimehintviewtest.OneTimeHintViewTestActivity"
     android:orientation="vertical">
 
-    <com.tinycoolthings.onetimehintview.OneTimeHintView
+    <FrameLayout
+        android:id="@+id/hint_view_test_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:oneTimeHintView_title="Did you know..."
-        app:oneTimeHintView_description="You can use this card to display useful information."
-        app:oneTimeHintView_key="got_it_test"
-        app:oneTimeHintView_debug="true"/>
+        android:layout_height="wrap_content"/>
+
+    <!--<com.tinycoolthings.onetimehintview.OneTimeHintView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--app:oneTimeHintView_title="Did you know..."-->
+        <!--app:oneTimeHintView_description="You can use this card to display useful information."-->
+        <!--app:oneTimeHintView_key="got_it_test"-->
+        <!--app:oneTimeHintView_debug="true"/>-->
 
     <LinearLayout
         android:layout_width="match_parent"

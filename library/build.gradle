@@ -1,31 +1,23 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
 
-apply plugin: 'maven'
-apply plugin: 'signing'
+// This is the library version used when deploying the artifact
+version = "0.5"
 
-version = "0.5.0"
-group = "com.github.joaocsousa"
-
-configurations {
-    archives {
-        extendsFrom configurations.default
-    }
-}
-
-signing {
-    required { has("release") && gradle.taskGraph.hasTask("uploadArchives") }
-    sign configurations.archives
-}
+def propertiesFile = "OneTimeHintView.properties";
 
 android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
 
+    resourcePrefix "onetimehintview__"
+
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 21
         versionCode 1
-        versionName project.version
+        versionName version
     }
     buildTypes {
         release {
@@ -35,58 +27,90 @@ android {
     }
 }
 
-uploadArchives {
-    configuration = configurations.archives
-    repositories.mavenDeployer {
+if(!project.hasProperty(propertiesFile)) {
+    println "Property " + propertiesFile + " doesn't exist in the gradle.build file";
+    if (!new File(project.property(propertiesFile)).exists()) {
+        println "File " + project.property(propertiesFile) + " doesn't exist";
+    }
+}
 
-        def propertiesFile = "OneTimeHintView.properties";
+Properties properties = new Properties()
+properties.load(new FileInputStream(file(project.property(propertiesFile))))
 
-        if(project.hasProperty(propertiesFile)) {
-            if (new File(project.property(propertiesFile)).exists()) {
-                Properties props = new Properties()
-                props.load(new FileInputStream(file(project.property(propertiesFile))))
+def siteUrl = 'https://github.com/joaocsousa/OneTimeHintView'      // Homepage URL of the library
+def gitUrl = 'https://github.com/joaocsousa/OneTimeHintView.git'   // Git repository URL
+group = "com.github.joaocsousa"                                    // Maven Group ID for the artifact
 
-                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom {
+            project {
+                packaging 'aar'
 
-                repository(url: props.sonatypeRepo) {
-                    authentication(userName: props.sonatypeUsername, password: props.sonatypePassword)
-                }
+                // Add your description here
+                name 'Hint view that is displayed until acknowledged.'
+                url siteUrl
 
-                pom.project {
-                    name 'OneTime Hint View'
-                    packaging 'aar'
-                    description 'Android library that provides a onetime hint view. Once dismissed it won\'t show again.'
-                    url 'https://github.com/joaocsousa/OneTimeHintView'
-
-                    scm {
-                        url 'scm:git@github.com:joaocsousa/OneTimeHintView.git'
-                        connection 'scm:git@github.com:joaocsousa/OneTimeHintView.git'
-                        developerConnection 'scm:git@github.com:joaocsousa/OneTimeHintView.git'
-                    }
-
-                    licenses {
-                        license {
-                            name 'The Apache Software License, Version 2.0'
-                            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                            distribution 'repo'
-                        }
-                    }
-
-                    developers {
-                        developer {
-                            id 'joaocsousa'
-                            name 'Joao Sousa'
-                            email 'jcruzsou@gmail.com'
-                        }
+                // Set your license
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
                     }
                 }
-            } else {
-                println "File " + project.property(propertiesFile) + " doesn't exist";
+                developers {
+                    developer {
+                        id properties.sonatypeUsername
+                        name properties.sonatypeName
+                        email properties.sonatypeEmail
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+
+                }
             }
-        } else {
-            println "Property " + propertiesFile + " doesn't exist in the gradle.build file";
         }
+    }
+}
 
+dependencies {
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+bintray {
+    user = properties.getProperty("bintrayUser")
+    key = properties.getProperty("bintrayApiKey")
+    configurations = ['archives']
+    pkg {
+        repo = "maven"
+        name = "OneTimeHintView"
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = ["Apache-2.0"]
+        publish = true
     }
 }
 

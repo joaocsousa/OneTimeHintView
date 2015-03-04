@@ -16,19 +16,21 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.tinycoolthings.onetimehintview.ui.AttributeManager;
+import com.tinycoolthings.onetimehintview.ui.Attribute;
+import com.tinycoolthings.onetimehintview.ui.Attributes;
 import com.tinycoolthings.onetimehintview.ui.Size;
 import com.tinycoolthings.onetimehintview.util.SimpleAnimatorListener;
 
 import java.util.ArrayList;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+import static com.tinycoolthings.onetimehintview.ui.Attributes.attributes;
 import static com.tinycoolthings.onetimehintview.util.Utils.isInDebugMode;
 
 /**
  * Created by joaosousa on 25/02/15.
  */
-public class OneTimeHintView extends LinearLayout {
+public class OneTimeHintView extends LinearLayout implements Attribute.AttributeTarget {
 
 	private static final int DEFAULT_ANIMATION_DURATION = 250;
 	private static final int DEFAULT_CONTENT_LAYOUT = R.layout.view_one_time_hint_view_default_content;
@@ -36,7 +38,7 @@ public class OneTimeHintView extends LinearLayout {
 	private ArrayList<OnDismissListener> mOnDismissListeners = new ArrayList<>();
 	private boolean mShow = true;
 	private Size mSize;
-	private AttributeManager mAttributeManager = new AttributeManager();
+	private Attributes mAttributes = attributes(this);
 	private boolean mDefaultContentLayout = false;
 
 	public OneTimeHintView(Context context) {
@@ -84,7 +86,7 @@ public class OneTimeHintView extends LinearLayout {
 	}
 
 	private void applyAttributes() {
-		mAttributeManager.applyTo(this);
+
 	}
 
 	@Override
@@ -97,12 +99,12 @@ public class OneTimeHintView extends LinearLayout {
 	}
 
 	private void markAsDismissed() {
-		getDefaultSharedPreferences(getContext()).edit().putBoolean(mAttributeManager.getPreferencesKey(), true).commit();
+		getDefaultSharedPreferences(getContext()).edit().putBoolean(mAttributes.getPreferencesKey().getValue(), true).commit();
 	}
 
 	private boolean wasDismissedBefore() {
-		return !mAttributeManager.isInDebug() &&
-			getDefaultSharedPreferences(getContext()).getBoolean(mAttributeManager.getPreferencesKey(), false);
+		return !mAttributes.isDebug().getValue() &&
+			getDefaultSharedPreferences(getContext()).getBoolean(mAttributes.getPreferencesKey().getValue(), false);
 	}
 
 	private void attachDismissListener() {
@@ -149,101 +151,158 @@ public class OneTimeHintView extends LinearLayout {
 	private void processAttributes(AttributeSet attrs, int defStyleAttr, int defStyleRes) {
 		TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.OneTimeHintView, defStyleAttr, defStyleRes);
 		try {
+			// preferences key
+			String key = typedArray.getString(R.styleable.OneTimeHintView_oneTimeHintView_key);
+			if (key == null || key.isEmpty()) {
+				throw new IllegalStateException("You definitely need to provide a preferences key to the " + getClass().getSimpleName() +
+					". Use the attribute \'one_time_hint_view_key\' to provide a unique key.");
+			}
+			mAttributes.setPreferencesKey(key);
 			// content layout
 			int layoutResource = typedArray.getResourceId(
 				R.styleable.OneTimeHintView_oneTimeHintView_contentLayout,
 				DEFAULT_CONTENT_LAYOUT);
-			mAttributeManager.setContentLayout(layoutResource);
-			// preferences key
-			mAttributeManager.setPreferencesKey(typedArray.getString(R.styleable.OneTimeHintView_oneTimeHintView_key));
-			if (mAttributeManager.getPreferencesKey() == null || mAttributeManager.getPreferencesKey().isEmpty()) {
-				throw new IllegalStateException("You definitely need to provide a preferences key to the " + getClass().getSimpleName() +
-					". Use the attribute \'one_time_hint_view_key\' to provide a unique key.");
-			}
+			mAttributes.setContentLayout(layoutResource);
 			// background color
 			int backgroundColor = typedArray.getColor(
 				R.styleable.OneTimeHintView_oneTimeHintView_backgroundColor,
 				R.color.one_time_hint_view_default_background_color);
-			mAttributeManager.setBackgroundColor(getResources().getColor(backgroundColor));
+			mAttributes.setBackgroundColor(getResources().getColor(backgroundColor));
 			// card background color
 			int cardBackgroundColor = typedArray.getColor(
 				R.styleable.OneTimeHintView_oneTimeHintView_cardColor,
 				R.color.one_time_hint_view_default_card_color);
-			mAttributeManager.setCardBackgroundColor(getResources().getColor(cardBackgroundColor));
+			mAttributes.setCardBackgroundColor(getResources().getColor(cardBackgroundColor));
 			// text color
 			int textColor = typedArray.getColor(
 				R.styleable.OneTimeHintView_oneTimeHintView_cardColor,
 				R.color.one_time_hint_view_default_text_color);
-			mAttributeManager.setGlobalTextColor(getResources().getColor(textColor));
+			mAttributes.setGlobalTextColor(getResources().getColor(textColor));
 			// title
-			mAttributeManager.setTitleTextColor(mAttributeManager.getGlobalTextColor());
-			mAttributeManager.setTitle(typedArray.getString(R.styleable.OneTimeHintView_oneTimeHintView_title));
+			mAttributes.setTitleTextColor(textColor);
+			mAttributes.setTitle(typedArray.getString(R.styleable.OneTimeHintView_oneTimeHintView_title));
 			// description
-			mAttributeManager.setDescriptionTextColor(mAttributeManager.getGlobalTextColor());
-			mAttributeManager.setDescription(typedArray.getString(R.styleable.OneTimeHintView_oneTimeHintView_description));
+			mAttributes.setDescriptionTextColor(textColor);
+			mAttributes.setDescription(typedArray.getString(R.styleable.OneTimeHintView_oneTimeHintView_description));
 			// button label
-			mAttributeManager.setButtonLabelTextColor(mAttributeManager.getGlobalTextColor());
+			mAttributes.setButtonLabelTextColor(textColor);
 			CharSequence defaultButtonLabel = getResources().getString(R.string.one_time_hint_view_button_default_label);
 			String buttonLabel = typedArray.getString(R.styleable.OneTimeHintView_oneTimeHintView_buttonLabel);
-			mAttributeManager.setButtonLabel(buttonLabel != null && !buttonLabel.isEmpty() ? buttonLabel : defaultButtonLabel);
+			mAttributes.setButtonLabel(buttonLabel != null && !buttonLabel.isEmpty() ? buttonLabel : defaultButtonLabel);
 			// debug
 			boolean isInDebugMode = isInDebugMode(getContext()) &&
 				typedArray.getBoolean(R.styleable.OneTimeHintView_oneTimeHintView_debug, false);
-			mAttributeManager.setDebug(isInDebugMode);
+			mAttributes.setDebug(isInDebugMode);
 		} finally {
 			typedArray.recycle();
 		}
 	}
 
-	public void addOnDismissListener(OnDismissListener onDismissListener) {
+	public OneTimeHintView addOnDismissListener(OnDismissListener onDismissListener) {
 		if (onDismissListener == null) {
 			throw new IllegalArgumentException("onDismissListener can't be null!");
 		}
 		mOnDismissListeners.add(onDismissListener);
+		return this;
 	}
 
-	public void setButtonLabelTextColor(int buttonLabelTextColor) {
+	public OneTimeHintView setButtonLabelTextColor(int buttonLabelTextColor) {
+		mAttributes.setButtonLabelTextColor(buttonLabelTextColor);
 		((Button) findViewById(R.id.one_time_hint_view_cardview_button)).setTextColor(buttonLabelTextColor);
+		return this;
 	}
 
-	public void setButtonLabel(CharSequence buttonLabel) {
+	@Override
+	public OneTimeHintView setDebug(boolean debug) {
+		return this;
+	}
+
+	public OneTimeHintView setButtonLabel(CharSequence buttonLabel) {
+		mAttributes.setButtonLabel(buttonLabel);
 		((Button) findViewById(R.id.one_time_hint_view_cardview_button)).setText(buttonLabel);
+		return this;
 	}
 
-	public void setDescription(CharSequence description) {
+	public OneTimeHintView setButtonLabel(int buttonLabel) {
+		return setButtonLabel(getResources().getString(buttonLabel));
+	}
+
+	public OneTimeHintView setDescription(CharSequence description) {
+		mAttributes.setDescription(description);
 		if (mDefaultContentLayout) {
 			((TextView) findViewById(R.id.one_time_hint_view_cardview_description)).setText(description);
 		}
+		return this;
 	}
 
-	public void setTitle(CharSequence title) {
+	public OneTimeHintView setDescription(int description) {
+		return setDescription(getResources().getString(description));
+	}
+
+	public OneTimeHintView setTitle(CharSequence title) {
+		mAttributes.setTitle(title);
 		if (mDefaultContentLayout) {
 			((TextView) findViewById(R.id.one_time_hint_view_cardview_title)).setText(title);
 		}
+		return this;
 	}
 
-	public void setDescriptionTextColor(int titleTextColor) {
+	public OneTimeHintView setTitle(int title) {
+		return setTitle(getResources().getString(title));
+	}
+
+	public OneTimeHintView setDescriptionTextColor(int titleTextColor) {
+		mAttributes.setDescriptionTextColor(titleTextColor);
 		if (mDefaultContentLayout) {
 			((TextView) findViewById(R.id.one_time_hint_view_cardview_description)).setTextColor(titleTextColor);
 		}
+		return this;
 	}
 
-	public void setTitleTextColor(int titleTextColor) {
+	public OneTimeHintView setTitleTextColor(int titleTextColor) {
+		mAttributes.setTitleTextColor(titleTextColor);
 		if (mDefaultContentLayout) {
 			((TextView) findViewById(R.id.one_time_hint_view_cardview_title)).setTextColor(titleTextColor);
 		}
+		return this;
 	}
 
-	public void setCardBackgroundColor(int cardBackgroundColor) {
+	@Override
+	public OneTimeHintView setPreferencesKey(String preferencesKey) {
+		return this;
+	}
+
+	@Override
+	public OneTimeHintView setCardBackgroundColor(int cardBackgroundColor) {
+		mAttributes.setCardBackgroundColor(cardBackgroundColor);
 		((CardView) findViewById(R.id.one_time_hint_view_cardview)).setCardBackgroundColor(cardBackgroundColor);
+		return this;
 	}
 
-	public void setContentLayout(int contentLayout) {
+	@Override
+	public OneTimeHintView setGlobalTextColor(int globalTextColor) {
+		return this;
+	}
+
+	@Override
+	public OneTimeHintView setViewBackgroundColor(int color) {
+
+		mAttributes.setBackgroundColor(color);
+		return this;
+	}
+
+	public OneTimeHintView setUniqueKey(String key) {
+		return this;
+	}
+
+	public OneTimeHintView setContentLayout(int contentLayout) {
 		mDefaultContentLayout = contentLayout == DEFAULT_CONTENT_LAYOUT;
 		ViewGroup root = (ViewGroup) findViewById(R.id.one_time_hint_view_content_container);
+		root.removeAllViews();
 		View content = LayoutInflater.from(getContext())
 			.inflate(contentLayout, root, false);
 		root.addView(content, 0);
+		return this;
 	}
 
 	public interface OnDismissListener {
