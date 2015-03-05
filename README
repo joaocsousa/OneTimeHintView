@@ -1,3 +1,4 @@
+
 # OneTimeHintView
 
 [![Build Status](https://travis-ci.org/joaocsousa/OneTimeHintView.svg?branch=master)](https://travis-ci.org/joaocsousa/OneTimeHintView)
@@ -11,14 +12,14 @@ TODO
 TODO
 
 ### XML
-~~~xml
-<com.tinycoolthings.onetimehintview.OneTimeHintView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:oneTimeHintView_title="Did you know..."
-    app:oneTimeHintView_description="You can use this card to display useful information."
-    app:oneTimeHintView_key="unique_key"/>
-~~~
+
+    <com.tinycoolthings.onetimehintview.OneTimeHintView
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       app:oneTimeHintView_title="Did you know..."
+       app:oneTimeHintView_description="You can use this card to display useful information."
+       app:oneTimeHintView_key="unique_key"/>
+
 
 
 ### Code
