@@ -6,6 +6,8 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
+import android.support.annotation.ColorRes;
+import android.support.annotation.StringRes;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -16,7 +18,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.tinycoolthings.onetimehintview.ui.Attribute;
 import com.tinycoolthings.onetimehintview.ui.Attributes;
 import com.tinycoolthings.onetimehintview.ui.Size;
 import com.tinycoolthings.onetimehintview.util.SimpleAnimatorListener;
@@ -24,13 +25,12 @@ import com.tinycoolthings.onetimehintview.util.SimpleAnimatorListener;
 import java.util.ArrayList;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
-import static com.tinycoolthings.onetimehintview.ui.Attributes.attributes;
 import static com.tinycoolthings.onetimehintview.util.Utils.isInDebugMode;
 
 /**
  * Created by joaosousa on 25/02/15.
  */
-public class OneTimeHintView extends LinearLayout implements Attribute.AttributeTarget {
+public class OneTimeHintView extends LinearLayout {
 
 	private static final int DEFAULT_ANIMATION_DURATION = 250;
 	private static final int DEFAULT_CONTENT_LAYOUT = R.layout.view_one_time_hint_view_default_content;
@@ -38,8 +38,7 @@ public class OneTimeHintView extends LinearLayout implements Attribute.Attribute
 	private ArrayList<OnDismissListener> mOnDismissListeners = new ArrayList<>();
 	private boolean mShow = true;
 	private Size mSize;
-	private Attributes mAttributes = attributes(this);
-	private boolean mDefaultContentLayout = false;
+	private Attributes mAttributes = new Attributes();
 
 	public OneTimeHintView(Context context) {
 		this(context, null);
@@ -86,7 +85,100 @@ public class OneTimeHintView extends LinearLayout implements Attribute.Attribute
 	}
 
 	private void applyAttributes() {
-
+		// preferences key
+		if (mAttributes.getPreferencesKey().changed()) {
+			if (wasDismissedBefore()) {
+				hide();
+			} else {
+				show();
+			}
+			mAttributes.getPreferencesKey().used();
+		}
+		// content layout
+		if (mAttributes.getContentLayout().changed()) {
+			ViewGroup root = (ViewGroup) findViewById(R.id.one_time_hint_view_content_container);
+			if (root != null) {
+				root.removeAllViews();
+				View content = LayoutInflater.from(getContext())
+					.inflate(mAttributes.getContentLayout().getValue(), root, false);
+				if (content != null) {
+					root.addView(content, 0);
+				}
+			}
+			mAttributes.getContentLayout().used();
+		}
+		// background color
+		if (mAttributes.getBackgroundColor().changed()) {
+			setBackgroundColor(mAttributes.getBackgroundColor().getValue());
+			mAttributes.getBackgroundColor().used();
+		}
+		// card background color
+		if (mAttributes.getCardBackgroundColor().changed()) {
+			CardView cardView = (CardView) findViewById(R.id.one_time_hint_view_cardview);
+			if (cardView != null) {
+				cardView.setCardBackgroundColor(mAttributes.getCardBackgroundColor().getValue());
+			}
+			mAttributes.getCardBackgroundColor().used();
+		}
+		// text color
+		if (mAttributes.getTextColor().changed()) {
+			// apply to title
+			TextView titleView = (TextView) findViewById(R.id.one_time_hint_view_cardview_title);
+			if (titleView != null) {
+				titleView.setTextColor(mAttributes.getTextColor().getValue());
+			}
+			// apply to description
+			TextView descriptionView = (TextView) findViewById(R.id.one_time_hint_view_cardview_description);
+			if (descriptionView != null) {
+				descriptionView.setTextColor(mAttributes.getTextColor().getValue());
+			}
+			// apply to button Label
+			Button buttonView = (Button) findViewById(R.id.one_time_hint_view_cardview_button);
+			if (buttonView != null) {
+				buttonView.setTextColor(mAttributes.getTextColor().getValue());
+			}
+			mAttributes.getTextColor().used();
+		}
+		// title
+		if (mAttributes.getTitle().changed()) {
+			TextView titleView = (TextView) findViewById(R.id.one_time_hint_view_cardview_title);
+			if (titleView != null) {
+				titleView.setText(mAttributes.getTitle().getValue());
+			}
+			mAttributes.getTitle().used();
+		}
+		// description
+		if (mAttributes.getDescription().changed()) {
+			TextView descriptionView = (TextView) findViewById(R.id.one_time_hint_view_cardview_description);
+			if (descriptionView != null) {
+				descriptionView.setText(mAttributes.getDescription().getValue());
+			}
+			mAttributes.getDescription().used();
+		}
+		// button label text color
+		if (mAttributes.getButtonLabelTextColor().changed()) {
+			TextView buttonView = (TextView) findViewById(R.id.one_time_hint_view_cardview_button);
+			if (buttonView != null) {
+				buttonView.setTextColor(mAttributes.getButtonLabelTextColor().getValue());
+			}
+			mAttributes.getButtonLabelTextColor().used();
+		}
+		// button label
+		if (mAttributes.getButtonLabel().changed()) {
+			Button buttonView = (Button) findViewById(R.id.one_time_hint_view_cardview_button);
+			if (buttonView != null) {
+				buttonView.setText(mAttributes.getButtonLabel().getValue());
+			}
+		}
+		// debug
+		if (mAttributes.isInDebug().changed()) {
+			if (wasDismissedBefore()) {
+				hide();
+			} else {
+				show();
+			}
+			mAttributes.isInDebug().used();
+		}
 	}
 
 	@Override
@@ -103,7 +195,7 @@ public class OneTimeHintView extends LinearLayout implements Attribute.Attribute
 	}
 
 	private boolean wasDismissedBefore() {
-		return !mAttributes.isDebug().getValue() &&
+		return !mAttributes.isInDebug().getValue() &&
 			getDefaultSharedPreferences(getContext()).getBoolean(mAttributes.getPreferencesKey().getValue(), false);
 	}
 
@@ -135,11 +227,19 @@ public class OneTimeHintView extends LinearLayout implements Attribute.Attribute
 		}
 	}
 
+	private void show() {
+		mShow = true;
+		updateVisibility();
+	}
+
 	private void hide() {
 		mShow = false;
 		updateVisibility();
 	}
 
+	/**
+	 * Updates the visibility of this view based.
+	 */
 	private void updateVisibility() {
 		setVisibility(mShow ? VISIBLE : GONE);
 		ViewGroup parent = (ViewGroup) getParent();
@@ -148,6 +248,12 @@ public class OneTimeHintView extends LinearLayout implements Attribute.Attribute
 		}
 	}
 
+	/**
+	 * Processes the attributes provided and stores them in a {@link com.tinycoolthings.onetimehintview.ui.Attributes} instance.
+	 * @param attrs
+	 * @param defStyleAttr
+	 * @param defStyleRes
+	 */
 	private void processAttributes(AttributeSet attrs, int defStyleAttr, int defStyleRes) {
 		TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.OneTimeHintView, defStyleAttr, defStyleRes);
 		try {
@@ -157,7 +263,7 @@ public class OneTimeHintView extends LinearLayout implements Attribute.Attribute
 				throw new IllegalStateException("You definitely need to provide a preferences key to the " + getClass().getSimpleName() +
 					". Use the attribute \'one_time_hint_view_key\' to provide a unique key.");
 			}
-			mAttributes.setPreferencesKey(key);
+			mAttributes.setKey(key);
 			// content layout
 			int layoutResource = typedArray.getResourceId(
 				R.styleable.OneTimeHintView_oneTimeHintView_contentLayout,
@@ -173,19 +279,18 @@ public class OneTimeHintView extends LinearLayout implements Attribute.Attribute
 				R.styleable.OneTimeHintView_oneTimeHintView_cardColor,
 				R.color.one_time_hint_view_default_card_color);
 			mAttributes.setCardBackgroundColor(getResources().getColor(cardBackgroundColor));
-			// text color
+			// global text color
 			int textColor = typedArray.getColor(
 				R.styleable.OneTimeHintView_oneTimeHintView_cardColor,
 				R.color.one_time_hint_view_default_text_color);
-			mAttributes.setGlobalTextColor(getResources().getColor(textColor));
+			mAttributes.setTextColor(getResources().getColor(textColor));
 			// title
-			mAttributes.setTitleTextColor(textColor);
 			mAttributes.setTitle(typedArray.getString(R.styleable.OneTimeHintView_oneTimeHintView_title));
 			// description
-			mAttributes.setDescriptionTextColor(textColor);
 			mAttributes.setDescription(typedArray.getString(R.styleable.OneTimeHintView_oneTimeHintView_description));
+			// button label text color
+			mAttributes.setButtonLabelTextColor(getResources().getColor(textColor));
 			// button label
-			mAttributes.setButtonLabelTextColor(textColor);
 			CharSequence defaultButtonLabel = getResources().getString(R.string.one_time_hint_view_button_default_label);
 			String buttonLabel = typedArray.getString(R.styleable.OneTimeHintView_oneTimeHintView_buttonLabel);
 			mAttributes.setButtonLabel(buttonLabel != null && !buttonLabel.isEmpty() ? buttonLabel : defaultButtonLabel);
@@ -193,11 +298,19 @@ public class OneTimeHintView extends LinearLayout implements Attribute.Attribute
 			boolean isInDebugMode = isInDebugMode(getContext()) &&
 				typedArray.getBoolean(R.styleable.OneTimeHintView_oneTimeHintView_debug, false);
 			mAttributes.setDebug(isInDebugMode);
+			// dismiss animation
+			boolean dismissAnimation = typedArray.getBoolean(R.styleable.OneTimeHintView_oneTimeHintView_dismissAnimation, true);
+			mAttributes.setDismissAnimation(dismissAnimation);
 		} finally {
 			typedArray.recycle();
 		}
 	}
 
+	/**
+	 * Adds a listener to the list of listeners to be notified when the card is dismissed.
+	 * @param onDismissListener The listener to be called when the card is dismissed.
+	 * @return
+	 */
 	public OneTimeHintView addOnDismissListener(OnDismissListener onDismissListener) {
 		if (onDismissListener == null) {
 			throw new IllegalArgumentException("onDismissListener can't be null!");
@@ -206,106 +319,144 @@ public class OneTimeHintView extends LinearLayout implements Attribute.Attribute
 		return this;
 	}
 
-	public OneTimeHintView setButtonLabelTextColor(int buttonLabelTextColor) {
+	/**
+	 * Sets the text color of the dismiss button label.
+	 * @param buttonLabelTextColor The text color to be applied to the button's text.
+	 * @return
+	 */
+	@SuppressWarnings("unused")
+	public OneTimeHintView setButtonLabelTextColor(@ColorRes int buttonLabelTextColor) {
 		mAttributes.setButtonLabelTextColor(buttonLabelTextColor);
-		((Button) findViewById(R.id.one_time_hint_view_cardview_button)).setTextColor(buttonLabelTextColor);
+		applyAttributes();
 		return this;
 	}
 
-	@Override
-	public OneTimeHintView setDebug(boolean debug) {
-		return this;
-	}
-
+	/**
+	 * Sets the card dismiss button label to be displayed.
+	 * @param buttonLabel The text to used as button label in the card.
+	 * @return
+	 */
+	@SuppressWarnings("unused")
 	public OneTimeHintView setButtonLabel(CharSequence buttonLabel) {
 		mAttributes.setButtonLabel(buttonLabel);
-		((Button) findViewById(R.id.one_time_hint_view_cardview_button)).setText(buttonLabel);
+		applyAttributes();
 		return this;
 	}
 
-	public OneTimeHintView setButtonLabel(int buttonLabel) {
+	/**
+	 * Sets the button label by delegating to {@link #setButtonLabel(CharSequence)},
+	 * but providing the resolved button label resource.
+	 * @param buttonLabel A string resource to be used as button label.
+	 * @return
+	 */
+	@SuppressWarnings("unused")
+	public OneTimeHintView setButtonLabel(@StringRes int buttonLabel) {
 		return setButtonLabel(getResources().getString(buttonLabel));
 	}
 
+	/**
+	 * Sets the card description to be displayed (if applicable).
+	 * @param description The description to used in the card.
+	 * @return
+	 */
+	@SuppressWarnings("unused")
 	public OneTimeHintView setDescription(CharSequence description) {
 		mAttributes.setDescription(description);
-		if (mDefaultContentLayout) {
-			((TextView) findViewById(R.id.one_time_hint_view_cardview_description)).setText(description);
-		}
+		applyAttributes();
 		return this;
 	}
 
-	public OneTimeHintView setDescription(int description) {
+	/**
+	 * Sets the card description (if applicable) by delegating to {@link #setDescription(CharSequence)},
+	 * but providing the resolved description resource.
+	 * @param description A string resource to be used as description.
+	 * @return
+	 */
+	@SuppressWarnings("unused")
+	public OneTimeHintView setDescription(@StringRes int description) {
 		return setDescription(getResources().getString(description));
 	}
 
+	/**
+	 * Sets the card title to be displayed (if applicable).
+	 * @param title The title to used in the card.
+	 * @return
+	 */
+	@SuppressWarnings("unused")
 	public OneTimeHintView setTitle(CharSequence title) {
 		mAttributes.setTitle(title);
-		if (mDefaultContentLayout) {
-			((TextView) findViewById(R.id.one_time_hint_view_cardview_title)).setText(title);
-		}
+		applyAttributes();
 		return this;
 	}
 
-	public OneTimeHintView setTitle(int title) {
+	/**
+	 * Sets the card title (if applicable) by delegating to {@link #setTitle(CharSequence)},
+	 * but providing the resolved title resource.
+	 * @param title A string resource to be used as title.
+	 * @return
+	 */
+	@SuppressWarnings("unused")
+	public OneTimeHintView setTitle(@StringRes int title) {
 		return setTitle(getResources().getString(title));
 	}
 
-	public OneTimeHintView setDescriptionTextColor(int titleTextColor) {
-		mAttributes.setDescriptionTextColor(titleTextColor);
-		if (mDefaultContentLayout) {
-			((TextView) findViewById(R.id.one_time_hint_view_cardview_description)).setTextColor(titleTextColor);
-		}
+	/**
+	 * Unique key that will determine if this view is supposed to be displayed or not.
+	 * @param key Should be a unique key.
+	 * @return
+	 */
+	@SuppressWarnings("unused")
+	public OneTimeHintView setKey(String key) {
+		mAttributes.setKey(key);
+		applyAttributes();
 		return this;
 	}
 
-	public OneTimeHintView setTitleTextColor(int titleTextColor) {
-		mAttributes.setTitleTextColor(titleTextColor);
-		if (mDefaultContentLayout) {
-			((TextView) findViewById(R.id.one_time_hint_view_cardview_title)).setTextColor(titleTextColor);
-		}
+	/**
+	 * Sets the text color to be used in both the title (if available), description (if available)
+	 * and button.
+	 * @param textColor The color to be used as text color.
+	 * @return
+	 */
+	@SuppressWarnings("unused")
+	public OneTimeHintView setTextColor(@ColorRes int textColor) {
+		mAttributes.setTextColor(textColor);
+		applyAttributes();
 		return this;
 	}
 
-	@Override
-	public OneTimeHintView setPreferencesKey(String preferencesKey) {
-		return this;
-	}
-
-	@Override
-	public OneTimeHintView setCardBackgroundColor(int cardBackgroundColor) {
-		mAttributes.setCardBackgroundColor(cardBackgroundColor);
-		((CardView) findViewById(R.id.one_time_hint_view_cardview)).setCardBackgroundColor(cardBackgroundColor);
-		return this;
-	}
-
-	@Override
-	public OneTimeHintView setGlobalTextColor(int globalTextColor) {
-		return this;
-	}
-
-	@Override
-	public OneTimeHintView setViewBackgroundColor(int color) {
-
+	/**
+	 * Sets the color background of the main view (not the card itself).
+	 * @param color Color resource to apply as background color.
+	 * @return
+	 */
+	@SuppressWarnings("unused")
+	public OneTimeHintView setBackground(@ColorRes int color) {
 		mAttributes.setBackgroundColor(color);
+		applyAttributes();
 		return this;
 	}
 
-	public OneTimeHintView setUniqueKey(String key) {
-		return this;
-	}
-
+	/**
+	 * Sets a custom content layout to be used in the card hint view.
+	 * @param contentLayout The layout to use.
+	 * @return
+	 */
+	@SuppressWarnings("unused")
 	public OneTimeHintView setContentLayout(int contentLayout) {
-		mDefaultContentLayout = contentLayout == DEFAULT_CONTENT_LAYOUT;
-		ViewGroup root = (ViewGroup) findViewById(R.id.one_time_hint_view_content_container);
-		root.removeAllViews();
-		View content = LayoutInflater.from(getContext())
-			.inflate(contentLayout, root, false);
-		root.addView(content, 0);
+		mAttributes.setContentLayout(contentLayout);
+		applyAttributes();
 		return this;
 	}
 
+	/**
+	 * Interface to be implemented by every class that wants
+	 * to be notified when this hint view is dismissed.
+	 */
 	public interface OnDismissListener {
+		/**
+		 * Method that will be called when this hint view is dismissed.
+		 */
 		void onDismiss();
 	}
 

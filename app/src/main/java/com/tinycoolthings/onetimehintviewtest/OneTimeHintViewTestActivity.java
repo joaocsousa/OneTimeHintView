@@ -13,11 +13,11 @@ public class OneTimeHintViewTestActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_one_time_hint_view_test);
-		new OneTimeHintView(this)
-			.setTitle("Did you know...")
-			.setDescription("That you can add hint views progamatically?")
-			.setCardBackgroundColor(android.R.color.holo_blue_bright)
-			.loadInto((android.view.ViewGroup) findViewById(R.id.hint_view_test_container));
+//		new OneTimeHintView(this)
+//			.setTitle("Did you know...")
+//			.setDescription("That you can add hint views progamatically?")
+//			.setCardBackgroundColor(android.R.color.holo_blue_bright)
+//			.loadInto((android.view.ViewGroup) findViewById(R.id.hint_view_test_container));
 	}
 
 	@Override

@@ -1,121 +1,30 @@
 package com.tinycoolthings.onetimehintview.ui;
 
-import java.util.ArrayList;
-
-import static com.tinycoolthings.onetimehintview.ui.Attribute.AttributeTarget;
-
 /**
  * Created by joaosousa on 28/02/15.
  * <p/>
- * Helper class that holds multiple attributes and applies them all to a target view.
+ * Helper class that holds multiple attributes.
  */
 
 public class Attributes {
 
-	private AttributeTarget mTarget;
-	private Attribute<String> mPreferencesKey = new Attribute<>(new Attribute.AttributeApplier<String>() {
-		@Override
-		public void apply(AttributeTarget target, String value) {
-			target.setPreferencesKey(value);
-		}
-	});
-	private Attribute<Integer> mBackgroundColor = new Attribute<>(new Attribute.AttributeApplier<Integer>() {
-		@Override
-		public void apply(AttributeTarget target, Integer value) {
-			target.setViewBackgroundColor(value);
-		}
-	});
-	private Attribute<Integer> mCardBackgroundColor = new Attribute<>(new Attribute.AttributeApplier<Integer>() {
-		@Override
-		public void apply(AttributeTarget target, Integer value) {
-			target.setCardBackgroundColor(value);
-		}
-	});
-	private Attribute<Integer> mGlobalTextColor = new Attribute<>(new Attribute.AttributeApplier<Integer>() {
-		@Override
-		public void apply(AttributeTarget target, Integer value) {
-			target.setGlobalTextColor(value);
-		}
-	});
-	private Attribute<Integer> mTitleTextColor = new Attribute<>(new Attribute.AttributeApplier<Integer>() {
-		@Override
-		public void apply(AttributeTarget target, Integer value) {
-			target.setTitleTextColor(value);
-		}
-	});
-	private Attribute<Integer> mDescriptionTextColor = new Attribute<>(new Attribute.AttributeApplier<Integer>() {
-		@Override
-		public void apply(AttributeTarget target, Integer value) {
-			target.setDescriptionTextColor(value);
-		}
-	});
-	private Attribute<CharSequence> mTitle = new Attribute<>(new Attribute.AttributeApplier<CharSequence>() {
-		@Override
-		public void apply(AttributeTarget target, CharSequence value) {
-			target.setTitle(value);
-		}
-	});
-	private Attribute<CharSequence> mDescription = new Attribute<>(new Attribute.AttributeApplier<CharSequence>() {
-		@Override
-		public void apply(AttributeTarget target, CharSequence value) {
-			target.setDescription(value);
-		}
-	});
-	private Attribute<CharSequence> mButtonLabel = new Attribute<>(new Attribute.AttributeApplier<CharSequence>() {
-		@Override
-		public void apply(AttributeTarget target, CharSequence value) {
-			target.setButtonLabel(value);
-		}
-	});
-	private Attribute<Integer> mButtonLabelTextColor = new Attribute<>(new Attribute.AttributeApplier<Integer>() {
-		@Override
-		public void apply(AttributeTarget target, Integer value) {
-			target.setButtonLabelTextColor(value);
-		}
-	});
-	private Attribute<Boolean> mDebug = new Attribute<>(new Attribute.AttributeApplier<Boolean>() {
-		@Override
-		public void apply(AttributeTarget target, Boolean value) {
-			target.setDebug(value);
-		}
-	});
-	private Attribute<Integer> mLayoutResource = new Attribute<>(new Attribute.AttributeApplier<Integer>() {
-		@Override
-		public void apply(AttributeTarget target, Integer value) {
-			target.setContentLayout(value);
-		}
-	});
-
-	private ArrayList<Attribute<?>> mAttributes = new ArrayList<>();
-
-	{
-		mAttributes.add(mPreferencesKey);
-		mAttributes.add(mBackgroundColor);
-		mAttributes.add(mCardBackgroundColor);
-		mAttributes.add(mGlobalTextColor);
-		mAttributes.add(mTitleTextColor);
-		mAttributes.add(mDescriptionTextColor);
-		mAttributes.add(mTitle);
-		mAttributes.add(mDescription);
-		mAttributes.add(mButtonLabel);
-		mAttributes.add(mButtonLabelTextColor);
-		mAttributes.add(mDebug);
-		mAttributes.add(mLayoutResource);
-	}
-
-	private Attributes(AttributeTarget target) {
-		mTarget = target;
-	}
-
-	public static Attributes attributes(AttributeTarget target) {
-		return new Attributes(target);
-	}
+	private Attribute<String> mPreferencesKey = new Attribute<>();
+	private Attribute<Integer> mBackgroundColor = new Attribute<>();
+	private Attribute<Integer> mCardBackgroundColor = new Attribute<>();
+	private Attribute<Integer> mTextColor = new Attribute<>();
+	private Attribute<CharSequence> mTitle = new Attribute<>();
+	private Attribute<CharSequence> mDescription = new Attribute<>();
+	private Attribute<CharSequence> mButtonLabel = new Attribute<>();
+	private Attribute<Integer> mButtonLabelTextColor = new Attribute<>();
+	private Attribute<Boolean> mDebug = new Attribute<>();
+	private Attribute<Integer> mLayoutResource = new Attribute<>();
+	private Attribute<Boolean> mDismissAnimation = new Attribute<>();
 
 	public Attribute<String> getPreferencesKey() {
 		return mPreferencesKey;
 	}
 
-	public void setPreferencesKey(String preferencesKey) {
+	public void setKey(String preferencesKey) {
 		mPreferencesKey.setValue(preferencesKey);
 	}
 
@@ -123,7 +32,7 @@ public class Attributes {
 		return mBackgroundColor;
 	}
 
-	public void setBackgroundColor(int backgroundColor) {
+	public void setBackgroundColor(Integer backgroundColor) {
 		mBackgroundColor.setValue(backgroundColor);
 	}
 
@@ -131,32 +40,16 @@ public class Attributes {
 		return mCardBackgroundColor;
 	}
 
-	public void setCardBackgroundColor(int cardBackgroundColor) {
+	public void setCardBackgroundColor(Integer cardBackgroundColor) {
 		mCardBackgroundColor.setValue(cardBackgroundColor);
 	}
 
-	public Attribute<Integer> getGlobalTextColor() {
-		return mGlobalTextColor;
+	public Attribute<Integer> getTextColor() {
+		return mTextColor;
 	}
 
-	public void setGlobalTextColor(int globalTextColor) {
-		mGlobalTextColor.setValue(globalTextColor);
-	}
-
-	public Attribute<Integer> getTitleTextColor() {
-		return mTitleTextColor;
-	}
-
-	public void setTitleTextColor(int titleTextColor) {
-		mTitleTextColor.setValue(titleTextColor);
-	}
-
-	public Attribute<Integer> getDescriptionTextColor() {
-		return mDescriptionTextColor;
-	}
-
-	public void setDescriptionTextColor(int descriptionTextColor) {
-		mDescriptionTextColor.setValue(descriptionTextColor);
+	public void setTextColor(Integer textColor) {
+		mTextColor.setValue(textColor);
 	}
 
 	public Attribute<CharSequence> getTitle() {
@@ -187,15 +80,15 @@ public class Attributes {
 		return mButtonLabelTextColor;
 	}
 
-	public void setButtonLabelTextColor(int buttonLabelTextColor) {
+	public void setButtonLabelTextColor(Integer buttonLabelTextColor) {
 		mButtonLabelTextColor.setValue(buttonLabelTextColor);
 	}
 
-	public Attribute<Boolean> isDebug() {
+	public Attribute<Boolean> isInDebug() {
 		return mDebug;
 	}
 
-	public void setDebug(boolean debug) {
+	public void setDebug(Boolean debug) {
 		mDebug.setValue(debug);
 	}
 
@@ -203,13 +96,16 @@ public class Attributes {
 		return mLayoutResource;
 	}
 
-	public void setContentLayout(int layoutResource) {
-		mLayoutResource.setValue(layoutResource);
+	public void setContentLayout(Integer contentLayout) {
+		mLayoutResource.setValue(contentLayout);
 	}
 
-	public void applyAll() {
-		for (Attribute<?> mAttribute : mAttributes) {
-			mAttribute.apply(mTarget);
-		}
+	public Attribute<Boolean> getDismissAnimation() {
+		return mDismissAnimation;
 	}
+
+	public void setDismissAnimation(Boolean dismissAnimation) {
+		mDismissAnimation.setValue(dismissAnimation);
+	}
+
 }

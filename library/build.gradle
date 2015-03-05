@@ -11,7 +11,7 @@ android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
 
-    resourcePrefix "onetimehintview__"
+    resourcePrefix "oneTimeHintView_"
 
     defaultConfig {
         minSdkVersion 15
@@ -117,4 +117,5 @@ bintray {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:cardview-v7:21.0.3'
+    compile 'com.android.support:support-annotations:21.0.3'
 }
