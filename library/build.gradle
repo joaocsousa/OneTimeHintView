@@ -5,7 +5,8 @@ apply plugin: 'com.jfrog.bintray'
 // This is the library version used when deploying the artifact
 version = "0.5"
 
-def propertiesFile = "OneTimeHintView.properties";
+ext.propertiesFile = "OneTimeHintView.properties";
+Properties properties = new Properties()
 
 android {
     compileSdkVersion 21
@@ -27,15 +28,21 @@ android {
     }
 }
 
-if(!project.hasProperty(propertiesFile)) {
-    println "Property " + propertiesFile + " doesn't exist in the gradle.build file";
-    if (!new File(project.property(propertiesFile)).exists()) {
-        println "File " + project.property(propertiesFile) + " doesn't exist";
+assembleRelease.doLast {
+    if (checkProjectProperties()) {
+        properties.load(new FileInputStream(file(project.property(propertiesFile))))
     }
 }
 
-Properties properties = new Properties()
-properties.load(new FileInputStream(file(project.property(propertiesFile))))
+boolean checkProjectProperties() {
+    if(!project.hasProperty(propertiesFile)) {
+        println "Property " + propertiesFile + " doesn't exist in the gradle.build file";
+        if (!new File(project.property(propertiesFile)).exists()) {
+            println "File " + project.property(propertiesFile) + " doesn't exist";
+        }
+    }
+    return project.hasProperty(propertiesFile) && new File(project.property(propertiesFile)).exists()
+}
 
 def siteUrl = 'https://github.com/joaocsousa/OneTimeHintView'      // Homepage URL of the library
 def gitUrl = 'https://github.com/joaocsousa/OneTimeHintView.git'   // Git repository URL
@@ -77,9 +84,6 @@ install {
     }
 }
 
-dependencies {
-}
-
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
     classifier = 'sources'
@@ -101,8 +105,8 @@ artifacts {
 }
 
 bintray {
-    user = properties.getProperty("bintrayUser")
-    key = properties.getProperty("bintrayApiKey")
+    user = properties.bintrayUser
+    key = properties.bintrayApiKey
     configurations = ['archives']
     pkg {
         repo = "maven"
