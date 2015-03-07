@@ -25,52 +25,123 @@ import com.tinycoolthings.onetimehintview.util.SimpleAnimatorListener;
 import java.util.ArrayList;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
-import static com.tinycoolthings.onetimehintview.util.Utils.isInDebugMode;
+import static com.tinycoolthings.onetimehintview.util.Utils.isDebugEnabled;
 
 /**
+ * Disposable view that will only be shown until the user acknowledges that they've read it, after
+ * which point it will no longer be displayed.
+ * <p/>
  * Created by joaosousa on 25/02/15.
  */
 public class OneTimeHintView extends LinearLayout {
 
+	/** The default duration of the dismiss animation. */
 	private static final int DEFAULT_ANIMATION_DURATION = 250;
+	/** The default content layout. */
 	private static final int DEFAULT_CONTENT_LAYOUT = R.layout.view_one_time_hint_view_default_content;
 
+	/** The list of dismiss listeners to be notified when this view is dismissed. */
 	private ArrayList<OnDismissListener> mOnDismissListeners = new ArrayList<>();
+	/** Boolean that controls if this view is supposed to be shown or not. */
 	private boolean mShow = true;
+	/** The size of this view. */
 	private Size mSize;
+	/** The list of attributes that this view will use to be costumized. */
 	private Attributes mAttributes = new Attributes();
 
+	private OnDismissListener mOnDismissedListener = new OnDismissListener() {
+
+		@Override
+		public void onDismiss() {
+			ValueAnimator animator = ValueAnimator.ofFloat(mSize.getHeight(), 0);
+			animator.setDuration(DEFAULT_ANIMATION_DURATION);
+			animator.setInterpolator(new AccelerateInterpolator());
+			animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+				public void onAnimationUpdate(ValueAnimator animation) {
+					getLayoutParams().height = ((Float) animation.getAnimatedValue()).intValue();
+					requestLayout();
+				}
+			});
+			animator.addListener(new SimpleAnimatorListener() {
+				@Override
+				public void onAnimationEnd(Animator animation) {
+					super.onAnimationEnd(animation);
+					markAsDismissed();
+					hide();
+				}
+			});
+			animator.start();
+		}
+	};
+
+	/**
+	 * Constructor. For arguments meaning, check {@link #OneTimeHintView(android.content.Context)}.
+	 *
+	 * @param context
+	 */
 	public OneTimeHintView(Context context) {
 		this(context, null);
 	}
 
+	/**
+	 * Constructor. For arguments meaning, check {@link #LinearLayout(android.content.Context, android.util.AttributeSet)}.
+	 *
+	 * @param context
+	 * @param attrs
+	 */
 	public OneTimeHintView(Context context, AttributeSet attrs) {
 		this(context, attrs, 0);
 	}
 
+	/**
+	 * Constructor. For arguments meaning, check {@link #LinearLayout(android.content.Context, android.util.AttributeSet, int)}.
+	 *
+	 * @param context
+	 * @param attrs
+	 * @param defStyleAttr
+	 */
 	public OneTimeHintView(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
 		init(attrs, defStyleAttr, R.style.OneTimeHintView);
 	}
 
+	/**
+	 * Constructor. For arguments meaning, check {@link #LinearLayout(android.content.Context, android.util.AttributeSet, int)}.
+	 *
+	 * @param context
+	 * @param attrs
+	 * @param defStyleAttr
+	 * @param defStyleRes
+	 */
 	@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 	public OneTimeHintView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
 		super(context, attrs, defStyleAttr, defStyleRes);
 		init(attrs, defStyleAttr, defStyleRes);
 	}
 
+	/**
+	 * Initialization method that will process the attributes from the xml and applied them
+	 *
+	 * @param attrs        Attribute set.
+	 * @param defStyleAttr Attribute of the current theme.
+	 * @param defStyleRes  Attribute of the current theme.
+	 */
 	private void init(AttributeSet attrs, int defStyleAttr, int defStyleRes) {
 		processAttributes(attrs, defStyleAttr, defStyleRes);
+		addOnDismissListener(mOnDismissedListener);
 		if (wasDismissedBefore()) {
 			hide();
 		} else {
 			LayoutInflater.from(getContext()).inflate(R.layout.view_one_time_hint_view_card, this, true);
 			applyAttributes();
-			setup();
+			prepareDismissListener();
 		}
 	}
 
-	private void setup() {
+	/**
+	 * Prepares the dismiss listener.
+	 */
+	private void prepareDismissListener() {
 		Button dismissButton = (Button) findViewById(R.id.one_time_hint_view_cardview_button);
 		if (dismissButton != null) {
 			dismissButton.setOnClickListener(new OnClickListener() {
@@ -84,6 +155,9 @@ public class OneTimeHintView extends LinearLayout {
 		}
 	}
 
+	/**
+	 * Apply every attribute available from the list of attributes.
+	 */
 	private void applyAttributes() {
 		// preferences key
 		if (mAttributes.getPreferencesKey().changed()) {
@@ -186,52 +260,36 @@ public class OneTimeHintView extends LinearLayout {
 		super.onLayout(changed, l, t, r, b);
 		if (mSize == null && getMeasuredWidth() > 0 && getMeasuredHeight() > 0) {
 			mSize = new Size(getMeasuredWidth(), getMeasuredHeight());
-			attachDismissListener();
 		}
 	}
 
+	/**
+	 * Marks this hitn view as dismissed, so that it won't be displayed again.
+	 */
 	private void markAsDismissed() {
 		getDefaultSharedPreferences(getContext()).edit().putBoolean(mAttributes.getPreferencesKey().getValue(), true).commit();
 	}
 
+	/**
+	 * Checks if this view has been dismissed before.
+	 * @return True if this view has been dismissed before, false otherwise.
+	 */
 	private boolean wasDismissedBefore() {
 		return !mAttributes.isInDebug().getValue() &&
 			getDefaultSharedPreferences(getContext()).getBoolean(mAttributes.getPreferencesKey().getValue(), false);
 	}
 
-	private void attachDismissListener() {
-		if (mSize != null) {
-			addOnDismissListener(new OnDismissListener() {
-				@Override
-				public void onDismiss() {
-					ValueAnimator animator = ValueAnimator.ofFloat(mSize.getHeight(), 0);
-					animator.setDuration(DEFAULT_ANIMATION_DURATION);
-					animator.setInterpolator(new AccelerateInterpolator());
-					animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-						public void onAnimationUpdate(ValueAnimator animation) {
-							getLayoutParams().height = ((Float) animation.getAnimatedValue()).intValue();
-							requestLayout();
-						}
-					});
-					animator.addListener(new SimpleAnimatorListener() {
-						@Override
-						public void onAnimationEnd(Animator animation) {
-							super.onAnimationEnd(animation);
-							markAsDismissed();
-							hide();
-						}
-					});
-					animator.start();
-				}
-			});
-		}
-	}
-
+	/**
+	 * Marks this view to be shown.
+	 */
 	private void show() {
 		mShow = true;
 		updateVisibility();
 	}
 
+	/**
+	 * Marks this view to be hidden.
+	 */
 	private void hide() {
 		mShow = false;
 		updateVisibility();
@@ -249,7 +307,10 @@ public class OneTimeHintView extends LinearLayout {
 	}
 
 	/**
-	 * Processes the attributes provided and stores them in a {@link com.tinycoolthings.onetimehintview.ui.Attributes} instance.
+	 * Processes the attributes provided and stores them in a
+	 * {@link com.tinycoolthings.onetimehintview.ui.Attributes} instance.
+	 * For arguments meaning see {@link #OneTimeHintView(android.content.Context, android.util.AttributeSet, int, int)}
+	 *
 	 * @param attrs
 	 * @param defStyleAttr
 	 * @param defStyleRes
@@ -295,7 +356,7 @@ public class OneTimeHintView extends LinearLayout {
 			String buttonLabel = typedArray.getString(R.styleable.OneTimeHintView_oneTimeHintView_buttonLabel);
 			mAttributes.setButtonLabel(buttonLabel != null && !buttonLabel.isEmpty() ? buttonLabel : defaultButtonLabel);
 			// debug
-			boolean isInDebugMode = isInDebugMode(getContext()) &&
+			boolean isInDebugMode = isDebugEnabled(getContext()) &&
 				typedArray.getBoolean(R.styleable.OneTimeHintView_oneTimeHintView_debug, false);
 			mAttributes.setDebug(isInDebugMode);
 			// dismiss animation
@@ -308,6 +369,7 @@ public class OneTimeHintView extends LinearLayout {
 
 	/**
 	 * Adds a listener to the list of listeners to be notified when the card is dismissed.
+	 *
 	 * @param onDismissListener The listener to be called when the card is dismissed.
 	 * @return
 	 */
@@ -321,6 +383,7 @@ public class OneTimeHintView extends LinearLayout {
 
 	/**
 	 * Sets the text color of the dismiss button label.
+	 *
 	 * @param buttonLabelTextColor The text color to be applied to the button's text.
 	 * @return
 	 */
@@ -333,6 +396,7 @@ public class OneTimeHintView extends LinearLayout {
 
 	/**
 	 * Sets the card dismiss button label to be displayed.
+	 *
 	 * @param buttonLabel The text to used as button label in the card.
 	 * @return
 	 */
@@ -346,6 +410,7 @@ public class OneTimeHintView extends LinearLayout {
 	/**
 	 * Sets the button label by delegating to {@link #setButtonLabel(CharSequence)},
 	 * but providing the resolved button label resource.
+	 *
 	 * @param buttonLabel A string resource to be used as button label.
 	 * @return
 	 */
@@ -356,6 +421,7 @@ public class OneTimeHintView extends LinearLayout {
 
 	/**
 	 * Sets the card description to be displayed (if applicable).
+	 *
 	 * @param description The description to used in the card.
 	 * @return
 	 */
@@ -369,6 +435,7 @@ public class OneTimeHintView extends LinearLayout {
 	/**
 	 * Sets the card description (if applicable) by delegating to {@link #setDescription(CharSequence)},
 	 * but providing the resolved description resource.
+	 *
 	 * @param description A string resource to be used as description.
 	 * @return
 	 */
@@ -379,6 +446,7 @@ public class OneTimeHintView extends LinearLayout {
 
 	/**
 	 * Sets the card title to be displayed (if applicable).
+	 *
 	 * @param title The title to used in the card.
 	 * @return
 	 */
@@ -392,6 +460,7 @@ public class OneTimeHintView extends LinearLayout {
 	/**
 	 * Sets the card title (if applicable) by delegating to {@link #setTitle(CharSequence)},
 	 * but providing the resolved title resource.
+	 *
 	 * @param title A string resource to be used as title.
 	 * @return
 	 */
@@ -402,6 +471,7 @@ public class OneTimeHintView extends LinearLayout {
 
 	/**
 	 * Unique key that will determine if this view is supposed to be displayed or not.
+	 *
 	 * @param key Should be a unique key.
 	 * @return
 	 */
@@ -415,6 +485,7 @@ public class OneTimeHintView extends LinearLayout {
 	/**
 	 * Sets the text color to be used in both the title (if available), description (if available)
 	 * and button.
+	 *
 	 * @param textColor The color to be used as text color.
 	 * @return
 	 */
@@ -427,6 +498,7 @@ public class OneTimeHintView extends LinearLayout {
 
 	/**
 	 * Sets the color background of the main view (not the card itself).
+	 *
 	 * @param color Color resource to apply as background color.
 	 * @return
 	 */
@@ -439,8 +511,8 @@ public class OneTimeHintView extends LinearLayout {
 
 	/**
 	 * Sets a custom content layout to be used in the card hint view.
+	 *
 	 * @param contentLayout The layout to use.
-	 * @return
 	 */
 	@SuppressWarnings("unused")
 	public OneTimeHintView setContentLayout(int contentLayout) {

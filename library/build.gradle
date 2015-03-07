@@ -12,13 +12,9 @@ android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
 
-    resourcePrefix "oneTimeHintView_"
-
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 21
-        versionCode 1
-        versionName version
     }
     buildTypes {
         release {

@@ -2,6 +2,8 @@ package com.tinycoolthings.onetimehintview.ui;
 
 /**
  * Created by joaosousa on 27/02/15.
+ * <p/>
+ * Helper class to manage a size (with and height).
  */
 public class Size {
 
@@ -13,6 +15,14 @@ public class Size {
 		mHeight = height;
 	}
 
+	/** Gets the width of this size (in pixels). */
+	@SuppressWarnings("unused")
+	public int getWidth() {
+		return mWidth;
+	}
+
+	/** Gets the height of this size (in pixels). */
+	@SuppressWarnings("unused")
 	public int getHeight() {
 		return mHeight;
 	}

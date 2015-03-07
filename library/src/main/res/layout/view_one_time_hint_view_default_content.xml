@@ -6,8 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="@dimen/one_time_hint_view_default_card_padding"
-    tools:ignore="ResourceName">
+    android:padding="@dimen/one_time_hint_view_default_card_padding">
 
     <TextView
         android:id="@+id/one_time_hint_view_cardview_title"
