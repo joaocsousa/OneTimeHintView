@@ -49,10 +49,10 @@ public class OneTimeHintView extends LinearLayout {
 	/** The list of attributes that this view will use to be costumized. */
 	private Attributes mAttributes = new Attributes();
 
-	private OnDismissListener mOnDismissedListener = new OnDismissListener() {
+	private OnClickListener mOnDismissButtonClickListener = new OnClickListener() {
 
 		@Override
-		public void onDismiss() {
+		public void onClick(View v) {
 			ValueAnimator animator = ValueAnimator.ofFloat(mSize.getHeight(), 0);
 			animator.setDuration(DEFAULT_ANIMATION_DURATION);
 			animator.setInterpolator(new AccelerateInterpolator());
@@ -128,30 +128,22 @@ public class OneTimeHintView extends LinearLayout {
 	 */
 	private void init(AttributeSet attrs, int defStyleAttr, int defStyleRes) {
 		processAttributes(attrs, defStyleAttr, defStyleRes);
-		addOnDismissListener(mOnDismissedListener);
 		if (wasDismissedBefore()) {
 			hide();
 		} else {
 			LayoutInflater.from(getContext()).inflate(R.layout.view_one_time_hint_view_card, this, true);
 			applyAttributes();
-			prepareDismissListener();
+			attachListenerToDismissButton();
 		}
 	}
 
 	/**
-	 * Prepares the dismiss listener.
+	 * Attaches the click listener to the dismiss button.
 	 */
-	private void prepareDismissListener() {
+	private void attachListenerToDismissButton() {
 		Button dismissButton = (Button) findViewById(R.id.one_time_hint_view_cardview_button);
 		if (dismissButton != null) {
-			dismissButton.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					for (OnDismissListener onDismissListener : mOnDismissListeners) {
-						onDismissListener.onDismiss();
-					}
-				}
-			});
+			dismissButton.setOnClickListener(mOnDismissButtonClickListener);
 		}
 	}
 
@@ -292,6 +284,9 @@ public class OneTimeHintView extends LinearLayout {
 	 */
 	private void hide() {
 		mShow = false;
+		for (OnDismissListener onDismissListener : mOnDismissListeners) {
+			onDismissListener.onDismiss();
+		}
 		updateVisibility();
 	}
 

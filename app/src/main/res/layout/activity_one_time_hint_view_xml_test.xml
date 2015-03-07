@@ -1,0 +1,76 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.tinycoolthings.onetimehintviewtest.OneTimeHintViewXmlTestActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/activity_one_time_hint_view_xml_test_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:id="@+id/hint_view_test_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <com.tinycoolthings.onetimehintview.OneTimeHintView
+                android:id="@+id/activity_one_time_hint_view_xml_test_hint_view_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:oneTimeHintView_title="Did you know..."
+                app:oneTimeHintView_description="You can use this card to display useful information."
+                app:oneTimeHintView_key="got_it_test_2"
+                app:oneTimeHintView_debug="true"/>
+
+            <View
+                android:id="@+id/activity_one_time_hint_view_xml_test_separator"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"/>
+
+            <com.tinycoolthings.onetimehintview.OneTimeHintView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:oneTimeHintView_key="got_it_test_1"
+                app:oneTimeHintView_contentLayout="@layout/view_one_time_hint_view_test_custom_content"
+                app:oneTimeHintView_debug="true"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="400dp"
+                android:background="#00BCD4"
+                android:padding="16dp">
+
+                <Button
+                    android:id="@+id/activity_one_time_hint_view_test_code_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Just with code"
+                    android:textColor="@android:color/white"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+</LinearLayout>

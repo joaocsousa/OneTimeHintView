@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.tinycoolthings.onetimehintviewtest">
+    package="com.tinycoolthings.onetimehintviewtest" >
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
         <activity
-            android:name=".OneTimeHintViewTestActivity"
-            android:label="@string/app_name">
+            android:name=".OneTimeHintViewXmlTestActivity"
+            android:label="@string/app_name" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".OneTimeHintViewCodeTestActivity"
+            android:label="@string/title_activity_one_time_hint_code_test"
+            android:parentActivityName=".OneTimeHintViewXmlTestActivity" >
         </activity>
     </application>
 
