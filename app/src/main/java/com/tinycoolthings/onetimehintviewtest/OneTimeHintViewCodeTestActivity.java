@@ -1,10 +1,13 @@
 package com.tinycoolthings.onetimehintviewtest;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+
+import static com.tinycoolthings.onetimehintview.OneTimeHintView.oneTimeHintView;
 
 
 public class OneTimeHintViewCodeTestActivity extends ActionBarActivity {
@@ -22,6 +25,14 @@ public class OneTimeHintViewCodeTestActivity extends ActionBarActivity {
 			}
 		});
 		setSupportActionBar(toolbar);
+		oneTimeHintView(this)
+			.withKey("oneTimeHintViewKey")
+			.withTitle("Did you also know")
+			.withDescription("You can also load a OneTimeHintView using code?")
+			.withCardBackgroundColor(Color.parseColor("#3F51B5"))
+			.withDebugEnabled(true)
+			.withTextColor(getResources().getColor(android.R.color.white))
+			.loadInto(findViewById(R.id.activity_one_time_hint_view_code_test_container));
 	}
 
 }

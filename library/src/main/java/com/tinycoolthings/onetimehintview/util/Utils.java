@@ -20,4 +20,20 @@ public class Utils {
 		return 0 != (context.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE);
 	}
 
+	/**
+	 * Returns if an object of any type is valid.
+	 *
+	 * @param victim The object to test.
+	 * @param <T>    The object's type.
+	 * @return If victim is null returns always false, otherwise returns the Boolean value,
+	 * true if victim instance of Integer and not {@link Integer#MAX_VALUE}, true if victim instance of String and not empty.
+	 */
+	public static <T extends Object> boolean isValid(T victim) {
+		return victim != null && (
+			victim instanceof Boolean && (Boolean) victim ||
+				victim instanceof Integer && (Integer) victim != Integer.MAX_VALUE ||
+				victim instanceof String && !((String) victim).isEmpty()
+		);
+	}
+
 }

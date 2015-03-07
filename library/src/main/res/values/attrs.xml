@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <declare-styleable name="OneTimeHintView" tools:ignore="ResourceName">
+<resources>
+    <declare-styleable name="OneTimeHintView">
         <attr name="oneTimeHintView_backgroundColor" format="color"/>
         <attr name="oneTimeHintView_cardColor" format="color"/>
         <attr name="oneTimeHintView_title" format="string"/>
         <attr name="oneTimeHintView_description" format="string"/>
         <attr name="oneTimeHintView_buttonLabel" format="string"/>
-        <attr name="oneTimeHintView_key" format="string|string"/>
+        <attr name="oneTimeHintView_buttonLabelTextColor" format="color"/>
+        <attr name="oneTimeHintView_key" format="string"/>
         <attr name="oneTimeHintView_textColor" format="color"/>
         <attr name="oneTimeHintView_debug" format="boolean"/>
         <attr name="oneTimeHintView_contentLayout" format="reference"/>
-        <attr name="oneTimeHintView_dismissAnimation" format="boolean"/>
+        <attr name="oneTimeHintView_animateDismiss" format="boolean"/>
     </declare-styleable>
 </resources>

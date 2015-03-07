@@ -35,9 +35,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:oneTimeHintView_title="Did you know..."
+                app:oneTimeHintView_backgroundColor="#607D8B"
+                app:oneTimeHintView_cardColor="@color/primaryColorDark"
                 app:oneTimeHintView_description="You can use this card to display useful information."
                 app:oneTimeHintView_key="got_it_test_2"
-                app:oneTimeHintView_debug="true"/>
+                app:oneTimeHintView_debug="true"
+                app:oneTimeHintView_buttonLabelTextColor="@android:color/white"
+                app:oneTimeHintView_textColor="@android:color/white"/>
 
             <View
                 android:id="@+id/activity_one_time_hint_view_xml_test_separator"
@@ -49,6 +53,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:oneTimeHintView_key="got_it_test_1"
+                app:oneTimeHintView_backgroundColor="#795548"
+                app:oneTimeHintView_cardColor="@color/accentColor"
+                app:oneTimeHintView_buttonLabelTextColor="@android:color/white"
                 app:oneTimeHintView_contentLayout="@layout/view_one_time_hint_view_test_custom_content"
                 app:oneTimeHintView_debug="true"/>
 

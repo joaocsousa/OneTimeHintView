@@ -8,7 +8,7 @@ package com.tinycoolthings.onetimehintview.ui;
 
 public class Attributes {
 
-	private Attribute<String> mPreferencesKey = new Attribute<>();
+	private Attribute<String> mKey = new Attribute<>();
 	private Attribute<Integer> mBackgroundColor = new Attribute<>();
 	private Attribute<Integer> mCardBackgroundColor = new Attribute<>();
 	private Attribute<Integer> mTextColor = new Attribute<>();
@@ -18,14 +18,14 @@ public class Attributes {
 	private Attribute<Integer> mButtonLabelTextColor = new Attribute<>();
 	private Attribute<Boolean> mDebug = new Attribute<>();
 	private Attribute<Integer> mLayoutResource = new Attribute<>();
-	private Attribute<Boolean> mDismissAnimation = new Attribute<>();
+	private Attribute<Boolean> mAnimateDismiss = new Attribute<>();
 
-	public Attribute<String> getPreferencesKey() {
-		return mPreferencesKey;
+	public Attribute<String> getKey() {
+		return mKey;
 	}
 
-	public void setKey(String preferencesKey) {
-		mPreferencesKey.setValue(preferencesKey);
+	public void setKey(String key) {
+		mKey.setValue(key);
 	}
 
 	public Attribute<Integer> getBackgroundColor() {
@@ -100,12 +100,12 @@ public class Attributes {
 		mLayoutResource.setValue(contentLayout);
 	}
 
-	public Attribute<Boolean> getDismissAnimation() {
-		return mDismissAnimation;
+	public Attribute<Boolean> shouldAnimateDismiss() {
+		return mAnimateDismiss;
 	}
 
-	public void setDismissAnimation(Boolean dismissAnimation) {
-		mDismissAnimation.setValue(dismissAnimation);
+	public void setAnimateDismiss(Boolean animateDismiss) {
+		mAnimateDismiss.setValue(animateDismiss);
 	}
 
 }
