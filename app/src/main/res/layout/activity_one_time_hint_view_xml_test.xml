@@ -53,7 +53,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:oneTimeHintView_key="got_it_test_1"
-                app:oneTimeHintView_backgroundColor="#795548"
                 app:oneTimeHintView_cardColor="@color/accentColor"
                 app:oneTimeHintView_buttonLabelTextColor="@android:color/white"
                 app:oneTimeHintView_contentLayout="@layout/view_one_time_hint_view_test_custom_content"
@@ -70,7 +69,7 @@
                     android:id="@+id/activity_one_time_hint_view_test_code_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Just with code"
+                    android:text="With Code"
                     android:textColor="@android:color/white"/>
 
             </LinearLayout>
