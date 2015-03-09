@@ -26,11 +26,11 @@ public class OneTimeHintViewCodeTestActivity extends ActionBarActivity {
 		});
 		setSupportActionBar(toolbar);
 		oneTimeHintView(this)
-			.withKey("oneTimeHintViewKey")
+			.withKey("got_it_test_3")
 			.withTitle("Did you also know")
 			.withDescription("You can also load a OneTimeHintView using code?")
 			.withCardBackgroundColor(Color.parseColor("#3F51B5"))
-			.withDebugEnabled(true)
+			.withDebugEnabled(false)
 			.withTextColor(getResources().getColor(android.R.color.white))
 			.loadInto(findViewById(R.id.activity_one_time_hint_view_code_test_container));
 	}

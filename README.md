@@ -6,12 +6,15 @@
 This is an Android library that allows you to easily add a onetime (or disposable) hint view to any layout with a high level of customization. Once the user dismisses the view, it'll never be displayed again.
 
 ##Preview
-TODO
+[Video](https://www.youtube.com/watch?v=y_98Phqq1LQ)
 
 ##Usage
-TODO
+First you need to import this library using gradle (coming soon).
+
 
 ### XML
+
+You can add a view to your XML:
 
     <com.tinycoolthings.onetimehintview.OneTimeHintView
        android:layout_width="match_parent"
@@ -20,11 +23,33 @@ TODO
        app:oneTimeHintView_description="You can use this card to display useful information."
        app:oneTimeHintView_key="unique_key"/>
 
-
-
 ### Code
-TODO
+Or you can add it through code if you wish:
 
+    oneTimeHintView(this)
+		.withKey("got_it_test_3")
+		.withTitle("Did you also know")
+		.withDescription("You can also load a OneTimeHintView using code?")
+		.withCardBackgroundColor(Color.parseColor("#3F51B5"))
+		.withDebugEnabled(false)
+		.withTextColor(getResources().getColor(android.R.color.white))
+		.loadInto(findViewById(R.id.hintViewContainer))
+
+###All properties
+
+There are setters for every property.
+
+    backgroundColor - Set the background color.
+    cardColor - Set the card's color.
+    title - Set the title.
+    description - Set the description.
+    buttonLabel - Set the button label.
+    buttonLabelTextColor - Set the text color.
+    key - Set the key.
+    textColor - Set the text color.
+    debug - If the app is in debug mode, force the view to be shown.
+    contentLayout - Sets a custom content layout.
+    animateDismiss - Should animate dismiss or not.
 
 ## License
 
