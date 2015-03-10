@@ -12,30 +12,13 @@ android {
         versionName "1.0"
     }
 
-    def hasSigningConfig = false;
-
-    def propertiesFile = "private.properties";
-
-    if(project.hasProperty(propertiesFile)) {
-        if (new File(project.property(propertiesFile)).exists()) {
-            Properties props = new Properties()
-            props.load(new FileInputStream(file(project.property(propertiesFile))))
-            hasSigningConfig = true;
-            android {
-                signingConfigs {
-                    release {
-                        storeFile file(props.keystore)
-                        storePassword props.keystorePassword
-                        keyAlias props.keyAlias
-                        keyPassword props.keyPassword
-                    }
-                }
-            }
-        } else {
-            println "File " + project.property(propertiesFile) + " doesn't exist";
+    signingConfigs {
+        release {
+            storeFile file(privateKeystore)
+            storePassword privateKeystorePassword
+            keyAlias privateKeyAlias
+            keyPassword privateKeyPassword
         }
-    } else {
-        println "Property " + propertiesFile + " doesn't exist in the gradle.build file";
     }
 
     buildTypes {
@@ -43,9 +26,7 @@ android {
             shrinkResources true
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            if (hasSigningConfig) {
-                signingConfig signingConfigs.release
-            }
+            signingConfig signingConfigs.release
         }
     }
 
