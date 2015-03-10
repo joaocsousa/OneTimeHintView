@@ -21,6 +21,13 @@ def siteUrl = 'https://github.com/joaocsousa/OneTimeHintView'      // Homepage U
 def gitUrl = 'https://github.com/joaocsousa/OneTimeHintView.git'   // Git repository URL
 group = "com.github.joaocsousa"                                    // Maven Group ID for the artifact
 
+def hasSonatypeConfig = project.hasProperty("sonatypeUsername") &&
+        project.hasProperty("sonatypeName") &&
+        project.hasProperty("sonatypeEmail")
+
+def hasBintrayConfig = project.hasProperty("bintrayUser") &&
+        project.hasProperty("bintrayApiKey")
+
 install {
     repositories.mavenInstaller {
         // This generates POM.xml with proper parameters
@@ -41,9 +48,11 @@ install {
                 }
                 developers {
                     developer {
-                        id sonatypeUsername
-                        name sonatypeName
-                        email sonatypeEmail
+                        if (hasSonatypeConfig) {
+                            id sonatypeUsername
+                            name sonatypeName
+                            email sonatypeEmail
+                        }
                     }
                 }
                 scm {
@@ -78,8 +87,10 @@ artifacts {
 }
 
 bintray {
-    user = bintrayUser
-    key = bintrayApiKey
+    if (hasBintrayConfig) {
+        user = bintrayUser
+        key = bintrayApiKey
+    }
     configurations = ['archives']
     pkg {
         repo = "maven"
