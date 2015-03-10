@@ -31,7 +31,7 @@ import static com.tinycoolthings.onetimehintview.util.Utils.isValid;
 /**
  * Disposable view that will only be shown until the user acknowledges that they've read it, after
  * which point it will no longer be displayed.
- * <p/>
+ * <p>
  * Created by joaosousa on 25/02/15.
  */
 public class OneTimeHintView extends LinearLayout {

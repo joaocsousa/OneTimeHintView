@@ -5,7 +5,7 @@ import android.content.pm.ApplicationInfo;
 
 /**
  * Created by joaosousa on 28/02/15.
- * </p>
+ * <p>
  * Utils class with helper methods.
  */
 public class Utils {

@@ -2,7 +2,7 @@ package com.tinycoolthings.onetimehintview.ui;
 
 /**
  * Created by joaosousa on 28/02/15.
- * <p/>
+ * <p>
  * Helper class that holds multiple attributes.
  */
 

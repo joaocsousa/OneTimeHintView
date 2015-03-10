@@ -4,7 +4,7 @@ import android.animation.Animator;
 
 /**
  * Dummy empty implementation of an {@link android.animation.Animator.AnimatorListener}
- * <p/>
+ * <p>
  * Created by joaosousa on 27/02/15.
  */
 public class SimpleAnimatorListener implements Animator.AnimatorListener {

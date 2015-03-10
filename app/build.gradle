@@ -12,12 +12,19 @@ android {
         versionName "1.0"
     }
 
+    def hasSigningConfig = project.hasProperty("privateKeystore") &&
+            project.hasProperty("privateKeystorePassword") &&
+            project.hasProperty("privateKeyAlias") &&
+            project.hasProperty("privateKeyPassword");
+
     signingConfigs {
         release {
-            storeFile file(privateKeystore)
-            storePassword privateKeystorePassword
-            keyAlias privateKeyAlias
-            keyPassword privateKeyPassword
+            if (hasSigningConfig) {
+                storeFile file(privateKeystore)
+                storePassword privateKeystorePassword
+                keyAlias privateKeyAlias
+                keyPassword privateKeyPassword
+            }
         }
     }
 
