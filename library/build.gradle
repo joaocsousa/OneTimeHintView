@@ -3,7 +3,7 @@ apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
 // This is the library version used when deploying the artifact
-version = "1.0.1"
+version = "1.0.0"
 
 android {
     compileSdkVersion 21
@@ -36,7 +36,8 @@ install {
                 packaging 'aar'
 
                 // Add your description here
-                name 'Hint view that is displayed until acknowledged.'
+                name 'OneTimeHintView'
+                description 'Android library that displays a dismissable view until aknowledged.'
                 url siteUrl
 
                 // Set your license
